@@ -8,7 +8,7 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.Logging;
 
-namespace MusicManagement.Server
+namespace MusicManagerISO18
 {
     public class Program
     {
