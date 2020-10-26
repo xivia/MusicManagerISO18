@@ -1,4 +1,4 @@
-namespace MusicManger.Server.Core.Model
+namespace MusicManager.Server.Core.Model
 {
     public class User
     {

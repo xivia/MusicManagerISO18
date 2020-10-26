@@ -1,4 +1,6 @@
-namespace MusicManger.Server.Core.Model
+using System;
+
+namespace MusicManager.Server.Core.Model
 {
     public class Song
     {
