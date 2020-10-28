@@ -9,7 +9,7 @@ namespace MusicManager.Server.Core.Repository
     {
         Task<T> Insert(T value);
         Task<T> Update(T value);
-        Task<T> Delete(T value);
+        Task<bool> Delete(T value);
         Task<T> GetById(long id);
         Task<List<T>> GetAll();
     }

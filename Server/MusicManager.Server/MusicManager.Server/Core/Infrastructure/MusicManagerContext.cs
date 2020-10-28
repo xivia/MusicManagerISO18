@@ -3,7 +3,7 @@ using MusicManager.Server.Core.Model;
 
 namespace MusicManger.Server.Core.Infrastructure
 {
-    public class MusicManagerContext : DbContext, IMusicManagerContext
+    public class MusicManagerContext : DbContext
     {
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<Genre> Genres { get; set; }

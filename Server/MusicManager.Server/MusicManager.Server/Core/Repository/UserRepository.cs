@@ -1,4 +1,5 @@
-﻿using MusicManager.Server.Core.Model;
+﻿using Microsoft.EntityFrameworkCore;
+using MusicManager.Server.Core.Model;
 using MusicManger.Server.Core.Infrastructure;
 using System;
 using System.Collections.Generic;
@@ -7,41 +8,69 @@ using System.Threading.Tasks;
 
 namespace MusicManager.Server.Core.Repository
 {
-    public class UserRepository : IRepository<User>
+    public interface IUserRepository : IRepository<User>
+    {
+
+    }
+
+    public class UserRepository : IUserRepository
     {
         #region Injectables
-        private IMusicManagerContext _context;
+        private MusicManagerContext _context;
         #endregion
 
-        public UserRepository(IMusicManagerContext context)
+        public UserRepository(MusicManagerContext context)
         {
             _context = context;
         }
 
         #region Interface Implementations
-        public Task<User> Delete(User value)
+        public async Task<bool> Delete(User user)
         {
-            throw new NotImplementedException();
+            bool isDeleted = false;
+
+            if (_context.Users.Contains(user))
+            {
+                _context.Users.Remove(user);
+                await _context.SaveChangesAsync();
+                isDeleted = true;
+            }
+
+            return isDeleted;
         }
 
-        public Task<List<User>> GetAll()
+        public async Task<List<User>> GetAll()
         {
-            throw new NotImplementedException();
+            return await _context.Users
+                            .Select(x => x)
+                            .ToListAsync();
         }
 
-        public Task<User> GetById(long id)
+        public async Task<User> GetById(long id)
         {
-            throw new NotImplementedException();
+            return await _context.Users
+                            .Where(user => user.UserId == id)
+                            .FirstOrDefaultAsync();
         }
 
-        public Task<User> Insert(User value)
+        public async Task<User> Insert(User user)
         {
-            throw new NotImplementedException();
+            _context.Users.Add(user);
+            await _context.SaveChangesAsync();
+            return user;
         }
 
-        public Task<User> Update(User value)
+        public async Task<User> Update(User user)
         {
-            throw new NotImplementedException();
+            var dbUser = await _context.Users.FirstOrDefaultAsync(u => u.UserId == user.UserId);
+            
+            if(!(dbUser is null))
+            {
+                _context.Entry(dbUser).CurrentValues.SetValues(user);
+                await _context.SaveChangesAsync();
+            }
+
+            return dbUser;
         }
         #endregion
     }
