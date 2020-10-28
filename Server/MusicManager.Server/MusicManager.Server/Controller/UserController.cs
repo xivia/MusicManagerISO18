@@ -30,7 +30,7 @@ namespace MusicManager.Server.Controller
 
             List<User> users = await _userRepository.GetAll();
 
-            responseDto.Data.Add("users", UserDtoMapper.FromDb(users));
+            responseDto.Data.Add("users", UserResponseDtoMapper.FromDb(users));
 
             return StatusCode((int) responseDto.StatusCode, responseDto);
         }

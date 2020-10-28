@@ -1,12 +1,9 @@
 ﻿using MusicManager.Server.Core.Model;
-using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace MusicManager.Server.Core.DataTransferObjects.Mapper
 {
-    public class UserDtoMapper
+    public class UserResponseDtoMapper
     {
 
         public static List<UserResponseDto> FromDb(List<User> dbUsers)
