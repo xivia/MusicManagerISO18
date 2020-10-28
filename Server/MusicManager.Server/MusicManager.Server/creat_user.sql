@@ -1,3 +1,4 @@
-﻿CREATE USER "music_manager"@"localhost" IDENTIFIED BY "1337";
+﻿-- Download and Install SQL Server 2019 https://go.microsoft.com/fwlink/?linkid=866662
+CREATE LOGIN music_manager WITH PASSWORD = '1337';
 CREATE DATABASE MusicManager;
-GRANT ALL ON MusicManager.* TO "music_manager"@"localhost";
+EXEC sp_addrolemember N'db_owner', N'music_manager';

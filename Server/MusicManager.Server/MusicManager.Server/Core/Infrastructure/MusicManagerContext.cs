@@ -5,21 +5,20 @@ namespace MusicManger.Server.Core.Infrastructure
 {
     public class MusicManagerContext : DbContext, IMusicManagerContext
     {
-        public DbSet<User> Users;
-        public DbSet<Genre> Genres;
-        public DbSet<Playlist> Playlists;
-        public DbSet<SongToPlaylist> SongToPlaylists;
-        public DbSet<Song> Songs;
+        public virtual DbSet<User> Users { get; set; }
+        public virtual DbSet<Genre> Genres { get; set; }
+        public virtual DbSet<Playlist> Playlists { get; set; }
+        public virtual DbSet<SongToPlaylist> SongToPlaylists { get; set; }
+        public virtual DbSet<Song> Songs { get; set; }
 
         public MusicManagerContext(DbContextOptions options) : base(options)
         {
-    
         }
 
         protected override void OnConfiguring(DbContextOptionsBuilder optionsBuilder)
         {
-            optionsBuilder.UseInternalServiceProvider(MySql)
-            optionsBuilder.UseSqlServer(@"Server=localhost;Database=musicmanager;Uid=music_manager;Pwd=1337;");
+            optionsBuilder
+                .UseSqlServer(@"Server=localhost\SQLSERVER2019;Database=MusicManager;User Id=music_manager;Password=1337;Initial Catalog=MusicManager");
         }
 
     }

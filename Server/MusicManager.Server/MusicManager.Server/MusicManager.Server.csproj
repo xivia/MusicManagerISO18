@@ -5,7 +5,11 @@
   </PropertyGroup>
 
   <ItemGroup>
-    <Folder Include="Core\Repository\" />
+    <Compile Remove="Migrations\20201026210304_Initial.cs" />
+    <Compile Remove="Migrations\20201026210304_Initial.Designer.cs" />
+  </ItemGroup>
+
+  <ItemGroup>
     <Folder Include="wwwroot\" />
   </ItemGroup>
 

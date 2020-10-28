@@ -1,8 +1,11 @@
+using System.ComponentModel.DataAnnotations;
+
 namespace MusicManager.Server.Core.Model
 {
     public class Genre
     {
-        public int GenreId { get; set; }
+        [Key]
+        public long GenreId { get; set; }
         public string Name { get; set; }
     }
 }

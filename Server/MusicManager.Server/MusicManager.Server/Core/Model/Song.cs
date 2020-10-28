@@ -1,11 +1,16 @@
 using System;
+using System.ComponentModel.DataAnnotations;
+using System.ComponentModel.DataAnnotations.Schema;
 
 namespace MusicManager.Server.Core.Model
 {
     public class Song
     {
-        public int SongId { get; set; }
+        [Key]
+        public long SongId { get; set; }
+        [ForeignKey("GenreId")]
         public Genre SongGenre { get; set; }
+        [ForeignKey("UserId")]
         public User Artist { get; set; }
         public string Name { get; set; }
         public string FilePath { get; set; }
