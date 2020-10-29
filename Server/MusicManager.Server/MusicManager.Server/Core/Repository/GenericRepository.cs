@@ -58,8 +58,10 @@ namespace MusicManager.Server.Core.Repository
             return value;
         }
 
-        public async Task<T> Update(T value)
+        public async Task<bool> Update(T value)
         {
+            bool isUpdated = false;
+
             var dbEntity = await _entities
                             .FirstOrDefaultAsync(entity => 
                                 (long) entity
@@ -75,9 +77,10 @@ namespace MusicManager.Server.Core.Repository
             {
                 _context.Entry(dbEntity).CurrentValues.SetValues(value);
                 await _context.SaveChangesAsync();
+                isUpdated = true;
             }
 
-            return value;
+            return isUpdated;
         }
     }
 }

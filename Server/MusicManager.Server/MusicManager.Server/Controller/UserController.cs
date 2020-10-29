@@ -81,6 +81,7 @@ namespace MusicManager.Server.Controller
 
                     responseDto.Infos.Messages.Add("Successfully created user");
                     responseDto.Data.Add("user", userResponseDto);
+                    responseDto.Data.Add("token", _userService.GenerateJwtToken(user));
                 }
                 else 
                 {

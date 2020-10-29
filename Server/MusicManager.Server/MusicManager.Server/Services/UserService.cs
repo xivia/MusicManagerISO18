@@ -20,6 +20,7 @@ namespace MusicManager.Server.Services
     {
         Task<BaseResponseDto> Authenticate(UserDto model);
         Task<User> GetById(long userId);
+        string GenerateJwtToken(User user);
     }
 
     public class UserService : IUserService
@@ -56,7 +57,7 @@ namespace MusicManager.Server.Services
 
         // helper methods
 
-        private string generateJwtToken(User user)
+        public string GenerateJwtToken(User user)
         {
             // generate token that is valid for 7 days
             var tokenHandler = new JwtSecurityTokenHandler();

@@ -8,7 +8,7 @@ namespace MusicManager.Server.Core.Repository
     public interface IRepository<T> where T : class
     {
         Task<T> Insert(T value);
-        Task<T> Update(T value);
+        Task<bool> Update(T value);
         Task<bool> Delete(T value);
         Task<T> GetById(long id);
         Task<List<T>> GetAll();
