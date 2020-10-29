@@ -10,7 +10,7 @@ namespace MusicManager.Server.Core.Repository
 {
     public interface IUserRepository : IRepository<User>
     {
-
+        User GetByUsername(string username);
     }
 
     public class UserRepository : GenericRepository<User>, IUserRepository
@@ -22,6 +22,13 @@ namespace MusicManager.Server.Core.Repository
         public UserRepository(MusicManagerContext context) : base(context)
         {
             _context = context;
+        }
+
+        public User GetByUsername(string username)
+        {
+            return _context.Users
+               .Where(user => user.Name == username)
+               .FirstOrDefault();
         }
 
     }

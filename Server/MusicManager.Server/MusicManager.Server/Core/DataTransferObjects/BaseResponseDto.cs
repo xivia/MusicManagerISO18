@@ -27,11 +27,13 @@ namespace MusicManager.Server.Core.DataTransferObjects
     {
         public List<string> Errors { get; set; }
         public List<string> Infos { get; set; }
+        public List<string> Messages { get; set; }
 
         public ResponseInfos()
         {
             Errors = new List<string>();
             Infos = new List<string>();
+            Messages = new List<string>();
         }
 
     }
