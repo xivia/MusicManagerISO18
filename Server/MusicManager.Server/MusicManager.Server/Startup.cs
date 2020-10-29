@@ -31,6 +31,9 @@ namespace MusicManager.Server
 
             // Repositories
             services.AddScoped<IUserRepository, UserRepository>();
+            services.AddScoped<ISongRepository, SongRepository>();
+            services.AddScoped<IPlaylistRepository, PlaylistRepository>();
+            services.AddScoped<IGenreRepository, GenreRepository>();
 
             // Services
             services.AddScoped<IUserService, UserService>();
