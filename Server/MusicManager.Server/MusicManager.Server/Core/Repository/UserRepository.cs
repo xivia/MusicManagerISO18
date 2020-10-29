@@ -10,7 +10,7 @@ namespace MusicManager.Server.Core.Repository
 {
     public interface IUserRepository : IRepository<User>
     {
-        User GetByUsername(string username);
+        Task<User> GetByUsername(string username);
     }
 
     public class UserRepository : GenericRepository<User>, IUserRepository
@@ -24,11 +24,11 @@ namespace MusicManager.Server.Core.Repository
             _context = context;
         }
 
-        public User GetByUsername(string username)
+        public async Task<User> GetByUsername(string username)
         {
-            return _context.Users
+            return await _context.Users
                .Where(user => user.Name == username)
-               .FirstOrDefault();
+               .FirstOrDefaultAsync();
         }
 
     }

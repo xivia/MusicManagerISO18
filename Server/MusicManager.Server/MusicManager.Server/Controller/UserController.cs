@@ -1,11 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
+﻿using System.Collections.Generic;
 using System.Linq;
 using System.Net;
-using System.Net.Http;
 using System.Threading.Tasks;
 using FluentValidation.Results;
-using Microsoft.AspNetCore.Http;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Internal;
 using MusicManager.Server.Core.DataTransferObjects;
@@ -14,6 +11,8 @@ using MusicManager.Server.Core.DataTransferObjects.UserDtos;
 using MusicManager.Server.Core.Model;
 using MusicManager.Server.Core.Repository;
 using MusicManager.Server.Core.Validators;
+using MusicManager.Server.Middleware;
+using MusicManager.Server.Services;
 
 namespace MusicManager.Server.Controller
 {
@@ -22,12 +21,15 @@ namespace MusicManager.Server.Controller
     public class UserController : ControllerBase
     {
         private IUserRepository _userRepository;
+        private IUserService _userService;
 
-        public UserController(IUserRepository userRepository)
+        public UserController(IUserRepository userRepository, IUserService userService)
         {
             _userRepository = userRepository;
+            _userService = userService;
         }
 
+        [Authorize]
         public async Task<ActionResult<BaseResponseDto>> Get()
         {
             var responseDto = new BaseResponseDto();
@@ -39,6 +41,7 @@ namespace MusicManager.Server.Controller
             return StatusCode((int) responseDto.StatusCode, responseDto);
         }
 
+        [Authorize]
         [HttpGet("{userId}")]
         public async Task<ActionResult<BaseResponseDto>> GetById(long userId)
         {
@@ -90,6 +93,21 @@ namespace MusicManager.Server.Controller
                 var joinedErrors = validationResult.Errors.Join(";");
                 responseDto.Infos.Errors.AddRange(joinedErrors.Split(";").ToList());
                 responseDto.StatusCode = HttpStatusCode.BadRequest;
+            }
+
+            return StatusCode((int)responseDto.StatusCode, responseDto);
+        }
+
+        [HttpPost("login")]
+        public async Task<ActionResult<BaseResponseDto>> Login([FromBody] UserDto user)
+        {
+            var responseDto = await _userService.Authenticate(user);
+
+            if(responseDto is null)
+            {
+                responseDto = new BaseResponseDto();
+                responseDto.Infos.Errors.Add("Invalid username or password!");
+                responseDto.StatusCode = HttpStatusCode.Unauthorized;
             }
 
             return StatusCode((int)responseDto.StatusCode, responseDto);

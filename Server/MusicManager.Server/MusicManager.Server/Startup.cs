@@ -1,27 +1,39 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+﻿using Microsoft.Extensions.Configuration;
 using Microsoft.AspNetCore.Builder;
 using Microsoft.AspNetCore.Hosting;
-using Microsoft.AspNetCore.Http;
 using Microsoft.Extensions.DependencyInjection;
 using MusicManger.Server.Core.Infrastructure;
-using Microsoft.EntityFrameworkCore.SqlServer;
 using MusicManager.Server.Core.Repository;
+using MusicManager.Server.Services;
+using MusicManager.Server.Middleware;
+using MusicManager.Server.Core.Config;
 
 namespace MusicManager.Server
 {
     public class Startup
     {
+        public IConfiguration Configuration { get; }
+
+        public Startup(IConfiguration configuration)
+        {
+            Configuration = configuration;
+        }
+
         // This method gets called by the runtime. Use this method to add services to the container.
         // For more information on how to configure your application, visit https://go.microsoft.com/fwlink/?LinkID=398940
         public void ConfigureServices(IServiceCollection services)
         {
+            services.AddCors();
+
+            services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
+
             services.AddDbContext<MusicManagerContext>();
 
             // Repositories
             services.AddScoped<IUserRepository, UserRepository>();
+
+            // Services
+            services.AddScoped<IUserService, UserService>();
 
             services.AddMvc();
         }
@@ -33,6 +45,13 @@ namespace MusicManager.Server
             {
                 app.UseDeveloperExceptionPage();
             }
+
+            app.UseCors(x => x     // ADJUST THIS IN PRODUCTION RETARD
+                .AllowAnyOrigin()
+                .AllowAnyMethod()
+                .AllowAnyHeader());
+
+            app.UseMiddleware<JwtMiddleware>();
 
             app.UseMvc();
 
