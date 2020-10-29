@@ -5,13 +5,6 @@ export const state = () => ({
     error: {},
     userName: '',
     email: '',
-    from: {
-        register: {
-            userName: '',
-            email: '',
-            password: ''
-        }
-    }
 })
 
 export type RootState = ReturnType<typeof state>
@@ -27,28 +20,21 @@ export const mutations: MutationTree<RootState> = {
     CHANGE_ERROR: (state, newError) => (state.error = newError),
     CHANGE_USERNAME: (state, newUserName) => (state.userName = newUserName),
     CHANGE_EMAIL: (state, newEmail) => (state.email = newEmail),
-    RESET_REGISTER_FROM: (state, ignore) => {
-        state.from.register = {
-            userName: '',
-            email: '',
-            password: ''
-        }
-    }
 }
 
 export const actions: ActionTree<RootState, RootState> = {
-    async register({commit}) {
+    async register({commit}, data) {
         const response = await this.$axios.$put('/api/authenticate', {
-            username: this.state.from.register.userName,
-            email: this.state.from.register.email,
-            password: this.state.from.register.password
+            username: data.userName,
+            email: data.email,
+            password: data.password
         });
 
         // if is successful
         if (true) {
             commit('CHANGE_ISAUTHENTICATED', true)
-            commit('CHANGE_USERNAME', this.state.from.register.userName);
-            commit('CHANGE_EMAIL', this.state.from.register.password);
+            commit('CHANGE_USERNAME', data.userName);
+            commit('CHANGE_EMAIL', data.email);
         
             commit('RESET_REGISTER_FROM', true);
         } else {
