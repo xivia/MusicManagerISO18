@@ -12,7 +12,7 @@ using MusicManager.Server.Core.Repository;
 
 namespace MusicManager.Server.Controller
 {
-    [Route("api/")]
+    [Route("api/user/")]
     [ApiController]
     public class UserController : ControllerBase
     {
@@ -23,7 +23,6 @@ namespace MusicManager.Server.Controller
             _userRepository = userRepository;
         }
 
-        [HttpGet("user")]
         public async Task<ActionResult<BaseResponseDto>> Get()
         {
             var responseDto = new BaseResponseDto();
@@ -33,6 +32,18 @@ namespace MusicManager.Server.Controller
             responseDto.Data.Add("users", UserResponseDtoMapper.FromDb(users));
 
             return StatusCode((int) responseDto.StatusCode, responseDto);
+        }
+
+        [HttpGet("{userId}")]
+        public async Task<ActionResult<BaseResponseDto>> GetById(long userId)
+        {
+            var responseDto = new BaseResponseDto();
+
+            User user = await _userRepository.GetById(userId);
+
+            responseDto.Data.Add("user", UserResponseDtoMapper.FromDb(user));
+
+            return StatusCode((int)responseDto.StatusCode, responseDto);
         }
 
     }

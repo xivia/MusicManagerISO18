@@ -8,78 +8,75 @@ using System.Threading.Tasks;
 
 namespace MusicManager.Server.Core.Repository
 {
-    public class GenericRepository<T> //: IRepository<T> where T : BaseEntity
+    public class GenericRepository<T> : IRepository<T> where T : class
     {
-        //protected readonly DbContext _context;
-        //private DbSet<T> _entities;
-        //string errorMessage = string.Empty;
-        //public Repository(IMusicManagerContext context)
-        //{
-        //    _context = (DbContext) context;
-        //    _entities = _context.Set<T>();
-        //}
-        //public IEnumerable<T> GetAll()
-        //{
-        //    return _entities.AsEnumerable();
-        //}
+        protected MusicManagerContext _context;
+        private DbSet<T> _entities;
 
-        //public void Delete(Guid id)
-        //{
-        //    if (id == null) throw new ArgumentNullException("entity");
+        public GenericRepository(MusicManagerContext context)
+        {
+            _context = context;
+            _entities = _context.Set<T>();
+        }
 
-        //    T entity = entities.SingleOrDefault(s => s.Id == id);
-        //    entities.Remove(entity);
-        //    context.SaveChanges();
-        //}
+        public async Task<bool> Delete(T value)
+        {
+            bool isDeleted = false;
 
-        //Task IRepository<T>.Insert(T value)
-        //{
-        //    if (value == null) throw new ArgumentNullException("entity");
+            if (_entities.Contains(value))
+            {
+                _entities.Remove(value);
+                await _context.SaveChangesAsync();
+                isDeleted = true;
+            }
 
-        //    _entities.Add(value);
-        //    await _context.SaveChangesAsync();
-        //}
+            return isDeleted;
+        }
 
-        //Task IRepository<T>.Update(T value)
-        //{
-        //    if (entity == null) throw new ArgumentNullException("entity");
-        //    _context.SaveChanges();
-        //}
+        public async Task<List<T>> GetAll()
+        {
+            return await _entities
+                            .Select(x => x)
+                            .ToListAsync();
+        }
 
-        //public Task Delete(T value)
-        //{
-        //    throw new NotImplementedException();
-        //}
+        public async Task<T> GetById(long id)
+        {
+            return await _entities
+                            .Where(entity => (long) entity
+                                .GetType()
+                                .GetProperty($"{typeof(T).Name}Id")
+                                .GetValue(entity, null) == id)
+                            .FirstOrDefaultAsync();
+        }
 
-        //public Task GetById(long id)
-        //{
-            
-        //}
+        public async Task<T> Insert(T value)
+        {
+            _entities.Add(value);
+            await _context.SaveChangesAsync();
+            return value;
+        }
 
+        public async Task<T> Update(T value)
+        {
+            var dbEntity = await _entities
+                            .FirstOrDefaultAsync(entity => 
+                                (long) entity
+                                    .GetType()
+                                    .GetProperty($"{typeof(T).Name}Id")
+                                    .GetValue(entity, null) 
+                                    == 
+                                (long) value.GetType()
+                                    .GetProperty($"{typeof(T).Name}Id")
+                                    .GetValue(entity, null));
 
-        //Task<T> IRepository<T>.Insert(T value)
-        //{
-        //    throw new NotImplementedException();
-        //}
+            if (!(dbEntity is null))
+            {
+                _context.Entry(dbEntity).CurrentValues.SetValues(value);
+                await _context.SaveChangesAsync();
+            }
 
-        //Task<T> IRepository<T>.Update(T value)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        //Task<T> IRepository<T>.Delete(T value)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        //Task<T> IRepository<T>.GetById(long id)
-        //{
-        //    throw new NotImplementedException();
-        //}
-
-        //Task<List<T>> IRepository<T>.GetAll()
-        //{
-        //    throw new NotImplementedException();
-        //}
+            return value;
+        }
     }
 }
