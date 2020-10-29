@@ -25,6 +25,9 @@ namespace MusicManager.Server.Core.DataTransferObjects.Mapper
 
         public static UserResponseDto FromDb(User dbUser)
         {
+            if (dbUser is null)
+                return null;
+
             return new UserResponseDto
             {
                 UserId = dbUser.UserId,

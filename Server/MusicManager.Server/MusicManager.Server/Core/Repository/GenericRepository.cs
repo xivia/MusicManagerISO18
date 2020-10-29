@@ -3,6 +3,7 @@ using MusicManager.Server.Core.Model;
 using MusicManger.Server.Core.Infrastructure;
 using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Threading.Tasks;
 

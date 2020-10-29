@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net;
 using System.Net.Http;
 using System.Threading.Tasks;
 using Microsoft.AspNetCore.Http;
@@ -40,6 +41,8 @@ namespace MusicManager.Server.Controller
             var responseDto = new BaseResponseDto();
 
             User user = await _userRepository.GetById(userId);
+
+            if(user is null) responseDto.StatusCode = HttpStatusCode.NotFound;
 
             responseDto.Data.Add("user", UserResponseDtoMapper.FromDb(user));
 
