@@ -1,0 +1,32 @@
+{
+    "register": {
+        "title": "Register",
+        "form": {
+            "userName": {
+                "name": "Benutzername",
+                "validation": {
+                    "required": "username is required",
+                    "minLength": "username is to short",
+                    "alphaNum": "username has unalowed characters"
+                }
+            },
+            "email": {
+                "name": "email",
+                "validation": {
+                    "required": "email is required",
+                    "minLength": "email is to short",
+                    "email": "email you enterd is not a email"
+                }
+            },
+            "password": {
+                "name": "password",
+                "validation": {
+                    "required": "password is required",
+                    "minLength": "password is to short"
+                }
+            },
+            "submit": "Submit",
+            "cancel": "Cancel"
+        }
+    }
+}

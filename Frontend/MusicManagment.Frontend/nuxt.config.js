@@ -1,3 +1,5 @@
+import i18n from './plugins/i18n'
+
 export default {
   // Target (https://go.nuxtjs.dev/config-target)
   target: 'static',
@@ -31,6 +33,23 @@ export default {
   buildModules: [
     // https://go.nuxtjs.dev/typescript
     '@nuxt/typescript-build',
+    [
+      'nuxt-i18n',
+      {
+        defaultLocale: 'en',
+         locales: [
+          {
+             code: 'en',
+             name: 'English'
+          },
+          {
+             code: 'de',
+             name: 'Deutsch'
+          }
+        ],
+        vueI18n: i18n
+      }
+     ]
   ],
 
   // Modules (https://go.nuxtjs.dev/config-modules)
@@ -39,6 +58,7 @@ export default {
     '@nuxtjs/bulma',
     // https://go.nuxtjs.dev/axios
     '@nuxtjs/axios',
+    'nuxt-i18n',
   ],
 
   // Axios module configuration (https://go.nuxtjs.dev/config-axios)

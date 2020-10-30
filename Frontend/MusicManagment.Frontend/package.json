@@ -16,6 +16,7 @@
     "@types/vuelidate": "^0.7.13",
     "core-js": "^3.6.5",
     "nuxt": "^2.14.6",
+    "nuxt-i18n": "^6.15.4",
     "vuelidate": "^0.7.6"
   },
   "devDependencies": {
