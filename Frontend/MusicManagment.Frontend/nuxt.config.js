@@ -36,6 +36,7 @@ export default {
     [
       'nuxt-i18n',
       {
+        strategy: 'prefix',
         defaultLocale: 'en',
          locales: [
           {

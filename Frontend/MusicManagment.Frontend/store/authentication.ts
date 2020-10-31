@@ -21,7 +21,23 @@ export const mutations: MutationTree<RootState> = {
 
 export const actions: ActionTree<RootState, RootState> = {
     async register({commit}, data) {
-        const response = await this.$axios.$post('/api/authenticate', {
+        const response = await this.$axios.$post('/api/user', {
+            username: data.userName,
+            password: data.password
+        });
+
+        // if is successful
+        if (true) {
+            commit('CHANGE_ISAUTHENTICATED', true)
+            commit('CHANGE_USERNAME', data.userName);
+        
+            commit('RESET_REGISTER_FROM', true);
+        } else {
+            commit('CHANGE_ERORR', response);
+        }
+    },
+    async login({commit}, data) {
+        const response = await this.$axios.$post('/api/user/login', {
             username: data.userName,
             password: data.password
         });

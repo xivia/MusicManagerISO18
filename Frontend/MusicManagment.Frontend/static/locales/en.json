@@ -1,4 +1,5 @@
 {
+    "title": "Music Manager",
     "register": {
         "title": "Register",
         "form": {
@@ -25,7 +26,37 @@
                     "minLength": "password is to short"
                 }
             },
-            "submit": "Submit",
+            "submit": "Register",
+            "cancel": "Cancel"
+        }
+    },
+    "login": {
+        "title": "Login",
+        "form": {
+            "userName": {
+                "name": "username",
+                "validation": {
+                    "required": "username is required",
+                    "minLength": "username is to short",
+                    "alphaNum": "username has unalowed characters"
+                }
+            },
+            "email": {
+                "name": "email",
+                "validation": {
+                    "required": "email is required",
+                    "minLength": "email is to short",
+                    "email": "email you enterd is not a email"
+                }
+            },
+            "password": {
+                "name": "password",
+                "validation": {
+                    "required": "password is required",
+                    "minLength": "password is to short"
+                }
+            },
+            "submit": "Login",
             "cancel": "Cancel"
         }
     }

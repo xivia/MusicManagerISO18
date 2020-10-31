@@ -1,20 +1,58 @@
 <template>
   <div>
-    <Nuxt />
+    <nav class="navbar" role="navigation" aria-label="main navigation">
+      <div class="navbar-brand">
+        <NuxtLink :to="localePath('index')" class="navbar-item">
+          {{ $t('title') }}
+        </NuxtLink>
+
+        <a
+          role="button"
+          class="navbar-burger burger"
+          aria-label="menu"
+          aria-expanded="false"
+          data-target="navbarBasicExample"
+        >
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+          <span aria-hidden="true"></span>
+        </a>
+      </div>
+
+      <div id="navbarBasicExample" class="navbar-menu">
+        <div class="navbar-start">
+          <a class="navbar-item"> Home </a>
+          <a class="navbar-item"> Documentation </a>
+        </div>
+
+        <div class="navbar-end">
+          <div class="navbar-item">
+            <div class="buttons">
+              <NuxtLink
+                class="button is-primary"
+                :to="localePath('register')"
+                >{{ $t('register.title') }}</NuxtLink
+              >
+              <NuxtLink
+                class="button is-primary"
+                :to="localePath('login')"
+                >{{ $t('login.title') }}</NuxtLink
+              >
+            </div>
+          </div>
+        </div>
+      </div>
+    </nav>
+    <div class="container">
+      <Nuxt />
+    </div>
   </div>
 </template>
 
 <style>
 html {
-  font-family:
-    'Source Sans Pro',
-    -apple-system,
-    BlinkMacSystemFont,
-    'Segoe UI',
-    Roboto,
-    'Helvetica Neue',
-    Arial,
-    sans-serif;
+  font-family: 'Source Sans Pro', -apple-system, BlinkMacSystemFont, 'Segoe UI',
+    Roboto, 'Helvetica Neue', Arial, sans-serif;
   font-size: 16px;
   word-spacing: 1px;
   -ms-text-size-adjust: 100%;

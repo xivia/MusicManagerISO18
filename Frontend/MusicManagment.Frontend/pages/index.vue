@@ -1,9 +1,7 @@
 <template>
-  <div class="container">
     <div>
-      <Register />
+      Start
     </div>
-  </div>
 </template>
 
 <script lang="ts">
