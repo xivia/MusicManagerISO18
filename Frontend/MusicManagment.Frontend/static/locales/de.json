@@ -26,18 +26,18 @@
         "title": "Login",
         "form": {
             "userName": {
-                "name": "username",
+                "name": "Benutzername",
                 "validation": {
-                    "required": "username is required",
-                    "minLength": "username is to short",
-                    "alphaNum": "username has unalowed characters"
+                    "required": "Benutzername muss vohanden sein",
+                    "minLength": "Benutzername ist zu kurtz",
+                    "alphaNum": "Benutzername hat unerlaupte buchstaben"
                 }
             },
             "password": {
-                "name": "password",
+                "name": "Password",
                 "validation": {
-                    "required": "password is required",
-                    "minLength": "password is to short"
+                    "required": "Password muss vohanden sein",
+                    "minLength": "Password ist zu kurtz"
                 }
             },
             "submit": "Login",
