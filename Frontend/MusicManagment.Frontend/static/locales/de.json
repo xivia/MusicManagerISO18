@@ -1,5 +1,10 @@
 {
     "title": "Music Manager",
+    "navigation": {
+        "login": "Login",
+        "logout": "Logout",
+        "register": "Registrieren"
+    },
     "register": {
         "title": "Registrieren",
         "form": {

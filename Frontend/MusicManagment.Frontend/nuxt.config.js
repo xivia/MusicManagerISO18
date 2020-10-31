@@ -71,6 +71,10 @@ export default {
     '/api/': 'http://localhost:5000',
   },
 
+  router: {
+    middleware: 'authenticated'
+  },
+
   // Build Configuration (https://go.nuxtjs.dev/config-build)
   build: {
     postcss: {

@@ -2,7 +2,8 @@ import { GetterTree, ActionTree, MutationTree } from 'vuex'
 
 export const state = () => ({
     isAuthenticated: false,
-    error: {},
+    token: String,
+    tokenData: {},
     userName: '',
 })
 
@@ -10,12 +11,13 @@ export type RootState = ReturnType<typeof state>
 
 export const getters: GetterTree<RootState, RootState> = {
     isAuthenticated: state => state.isAuthenticated,
+    token: state => state.token,
     userName: state => state.userName
 }
 
 export const mutations: MutationTree<RootState> = {
     CHANGE_ISAUTHENTICATED: (state, newIsAuthenticated) => (state.isAuthenticated = newIsAuthenticated),
-    CHANGE_ERROR: (state, newError) => (state.error = newError),
+    CHANGE_TOKEN: (state, newToken) => (state.token = newToken),
     CHANGE_USERNAME: (state, newUserName) => (state.userName = newUserName),
 }
 
@@ -27,13 +29,12 @@ export const actions: ActionTree<RootState, RootState> = {
         });
 
         // if is successful
-        if (true) {
-            commit('CHANGE_ISAUTHENTICATED', true)
+        if (!response.infos.hasErrors) {
+            alert('Success now login');
             commit('CHANGE_USERNAME', data.userName);
-        
-            commit('RESET_REGISTER_FROM', true);
+            this.$router.push('/login');
         } else {
-            commit('CHANGE_ERORR', response);
+            console.error(response);
         }
     },
     async login({commit}, data) {
@@ -43,13 +44,16 @@ export const actions: ActionTree<RootState, RootState> = {
         });
 
         // if is successful
-        if (true) {
-            commit('CHANGE_ISAUTHENTICATED', true)
-            commit('CHANGE_USERNAME', data.userName);
-        
-            commit('RESET_REGISTER_FROM', true);
+        if (!response.infos.hasErrors) {
+            commit('CHANGE_ISAUTHENTICATED', true);
+            commit('CHANGE_TOKEN', response.data.Token);
+            this.$router.push(`/${this.$i18n.locale}`);
         } else {
-            commit('CHANGE_ERORR', response);
+            console.error(response);
         }
+    },
+    logout({commit}) {
+        commit('CHANGE_ISAUTHENTICATED', false);
+        this.$router.push('/login');
     }
 }

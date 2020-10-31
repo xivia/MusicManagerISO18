@@ -27,17 +27,28 @@
 
         <div class="navbar-end">
           <div class="navbar-item">
-            <div class="buttons">
-              <NuxtLink
-                class="button is-primary"
-                :to="localePath('register')"
-                >{{ $t('register.title') }}</NuxtLink
-              >
-              <NuxtLink
-                class="button is-primary"
-                :to="localePath('login')"
-                >{{ $t('login.title') }}</NuxtLink
-              >
+            <div v-if="!isAuthenticated">
+              <div class="buttons">
+                <NuxtLink
+                  class="button is-primary"
+                  :to="localePath('register')"
+                  >{{ $t('navigation.register') }}</NuxtLink
+                >
+                <NuxtLink
+                  class="button is-primary"
+                  :to="localePath('login')"
+                  >{{ $t('navigation.login') }}</NuxtLink
+                >
+              </div>
+            </div>
+            <div v-if="isAuthenticated">
+              <div class="buttons">
+                <button
+                  class="button is-primary"
+                  @click="logout()"
+                  >{{ $t('navigation.logout') }}</button
+                >
+              </div>
             </div>
           </div>
         </div>
@@ -48,6 +59,31 @@
     </div>
   </div>
 </template>
+
+<script lang='ts'>
+import Vue from 'vue';
+import { getters } from '~/store/authentication'
+
+export default Vue.extend({
+  name: 'Default',
+
+  data() {
+    return {
+      isAuthenticated: false
+    }
+  },
+
+  beforeUpdate() {
+    this.isAuthenticated = this.$store.getters['authentication/isAuthenticated'] as ReturnType<typeof getters.isAuthenticated>
+  },
+
+  methods: {
+    logout(): void {
+      this.$store.dispatch('authentication/logout');
+    }
+  }
+})
+</script>
 
 <style>
 html {
