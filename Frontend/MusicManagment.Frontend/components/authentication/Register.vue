@@ -33,7 +33,7 @@
 
 <script lang='ts'>
 import Vue from 'vue'
-import { required, minLength, alphaNum } from 'vuelidate/lib/validators'
+import { required, minLength, maxLength, alphaNum } from 'vuelidate/lib/validators'
 
 export default Vue.extend({
   name: 'Register',
@@ -53,7 +53,8 @@ export default Vue.extend({
     },
     password: {
       required,
-      minLength: minLength(4),
+      minLength: minLength(8),
+      maxLength: maxLength(18)
     },
   },
   
