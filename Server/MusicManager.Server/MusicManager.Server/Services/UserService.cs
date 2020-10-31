@@ -45,7 +45,7 @@ namespace MusicManager.Server.Services
             if (user.Password != model.Password) return null; // Fuck it no encryption :D
 
             // authentication successful so generate jwt token
-            var token = generateJwtToken(user);
+            var token = GenerateJwtToken(user);
 
             var response = new BaseResponseDto();
 

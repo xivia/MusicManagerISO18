@@ -18,7 +18,6 @@
     <PackageReference Include="FluentValidation.AspNetCore" Version="9.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.1.2" PrivateAssets="All" />
-    <PackageReference Include="MySql.Data.Entity" Version="6.9.9" />
   </ItemGroup>
 
 </Project>

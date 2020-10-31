@@ -66,7 +66,7 @@ namespace MusicManager.Server.Controller
 
             if(validationResult.IsValid)
             {
-                var dbUser = _userRepository.GetByUsername(userDto.UserName);
+                var dbUser = await _userRepository.GetByUsername(userDto.UserName);
 
                 if (dbUser is null)
                 {
