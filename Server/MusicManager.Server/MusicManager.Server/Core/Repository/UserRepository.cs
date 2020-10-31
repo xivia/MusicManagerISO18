@@ -15,13 +15,8 @@ namespace MusicManager.Server.Core.Repository
 
     public class UserRepository : GenericRepository<User>, IUserRepository
     {
-        #region Injectables
-        private MusicManagerContext _context;
-        #endregion
-
         public UserRepository(MusicManagerContext context) : base(context)
         {
-            _context = context;
         }
 
         public async Task<User> GetByUsername(string username)
