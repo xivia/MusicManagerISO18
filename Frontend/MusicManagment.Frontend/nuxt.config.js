@@ -1,4 +1,4 @@
-import i18n from './plugins/i18n'
+import i18n from './plugins/i18n';
 
 export default {
   // Target (https://go.nuxtjs.dev/config-target)
@@ -72,7 +72,7 @@ export default {
   },
 
   router: {
-    middleware: 'authenticated'
+    middleware: 'AuthenticationGuard'
   },
 
   // Build Configuration (https://go.nuxtjs.dev/config-build)

@@ -47,6 +47,18 @@ export const actions: ActionTree<RootState, RootState> = {
         if (!response.infos.hasErrors) {
             commit('CHANGE_ISAUTHENTICATED', true);
             commit('CHANGE_TOKEN', response.data.Token);
+
+            this.$axios.interceptors.request.use((config) => {
+                // Do something before request is sent
+                const isAuthenticated = this.getters['authentication/isAuthenticated'] as ReturnType<typeof getters.isAuthenticated>;
+                if (isAuthenticated) {
+                  const token = this.getters['authentication/token'] as ReturnType<typeof getters.token>;
+                  config.headers['Authorization'] = `Bearer ${token}`;
+                  console.log(token);
+                }
+                return config;
+              });
+            
             this.$router.push(`/${this.$i18n.locale}`);
         } else {
             console.error(response);
