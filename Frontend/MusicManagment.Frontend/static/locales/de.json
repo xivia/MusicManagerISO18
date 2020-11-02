@@ -1,0 +1,52 @@
+{
+    "title": "Music Manager",
+    "navigation": {
+        "login": "Login",
+        "logout": "Logout",
+        "register": "Registrieren"
+    },
+    "register": {
+        "title": "Registrieren",
+        "form": {
+            "userName": {
+                "name": "Benutzername",
+                "validation": {
+                    "required": "Benutzername muss vohanden sein",
+                    "minLength": "Benutzername ist zu kurtz",
+                    "alphaNum": "Benutzername hat unerlaupte buchstaben"
+                }
+            },
+            "password": {
+                "name": "Password",
+                "validation": {
+                    "required": "Password muss vohanden sein",
+                    "minLength": "Password ist zu kurtz"
+                }
+            },
+            "submit": "Registrieren",
+            "cancel": "Abrechen"
+        }
+    },
+    "login": {
+        "title": "Login",
+        "form": {
+            "userName": {
+                "name": "Benutzername",
+                "validation": {
+                    "required": "Benutzername muss vohanden sein",
+                    "minLength": "Benutzername ist zu kurtz",
+                    "alphaNum": "Benutzername hat unerlaupte buchstaben"
+                }
+            },
+            "password": {
+                "name": "Password",
+                "validation": {
+                    "required": "Password muss vohanden sein",
+                    "minLength": "Password ist zu kurtz"
+                }
+            },
+            "submit": "Login",
+            "cancel": "Cancel"
+        }
+    }
+}
