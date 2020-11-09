@@ -4,9 +4,10 @@ using Microsoft.AspNetCore.Hosting;
 using Microsoft.Extensions.DependencyInjection;
 using MusicManger.Server.Core.Infrastructure;
 using MusicManager.Server.Core.Repository;
-using MusicManager.Server.Services;
-using MusicManager.Server.Middleware;
 using MusicManager.Server.Core.Config;
+using Microsoft.AspNetCore.Authentication.JwtBearer;
+using Microsoft.IdentityModel.Tokens;
+using System.Text;
 
 namespace MusicManager.Server
 {
@@ -35,8 +36,21 @@ namespace MusicManager.Server
             services.AddScoped<IPlaylistRepository, PlaylistRepository>();
             services.AddScoped<IGenreRepository, GenreRepository>();
 
-            // Services
-            services.AddScoped<IUserService, UserService>();
+            services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
+                .AddJwtBearer(options =>
+                {
+                    options.TokenValidationParameters = new TokenValidationParameters
+                    {
+                        ValidateIssuer = true,
+                        ValidateAudience = true,
+                        ValidateLifetime = true,
+                        ValidateIssuerSigningKey = true,
+                        ValidIssuer = Configuration["Jwt:Issuer"],
+                        ValidAudience = Configuration["Jwt:Issuer"],
+                        IssuerSigningKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(Configuration["Jwt:Key"]))
+
+                    };
+                });
 
             services.AddMvc();
         }
@@ -54,14 +68,9 @@ namespace MusicManager.Server
                 .AllowAnyMethod()
                 .AllowAnyHeader());
 
-            app.UseMiddleware<JwtMiddleware>();
+            app.UseAuthentication();
 
             app.UseMvc();
-
-            //app.Run(async (context) =>
-            //{
-            //    await context.Response.WriteAsync("Hello World!");
-            //});
         }
     }
 }

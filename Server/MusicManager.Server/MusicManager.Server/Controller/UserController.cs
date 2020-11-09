@@ -1,18 +1,22 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
+using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Net;
+using System.Text;
 using System.Threading.Tasks;
 using FluentValidation.Results;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore.Internal;
+using Microsoft.Extensions.Configuration;
+using Microsoft.IdentityModel.Tokens;
 using MusicManager.Server.Core.DataTransferObjects;
 using MusicManager.Server.Core.DataTransferObjects.Mapper;
 using MusicManager.Server.Core.DataTransferObjects.UserDtos;
 using MusicManager.Server.Core.Model;
 using MusicManager.Server.Core.Repository;
 using MusicManager.Server.Core.Validators;
-using MusicManager.Server.Middleware;
-using MusicManager.Server.Services;
 
 namespace MusicManager.Server.Controller
 {
@@ -21,12 +25,12 @@ namespace MusicManager.Server.Controller
     public class UserController : ControllerBase
     {
         private IUserRepository _userRepository;
-        private IUserService _userService;
+        private IConfiguration _config;
 
-        public UserController(IUserRepository userRepository, IUserService userService)
+        public UserController(IUserRepository userRepository, IConfiguration configuration)
         {
             _userRepository = userRepository;
-            _userService = userService;
+            _config = configuration;
         }
 
         [Authorize]
@@ -81,7 +85,7 @@ namespace MusicManager.Server.Controller
 
                     responseDto.Infos.Messages.Add("Successfully created user");
                     responseDto.Data.Add("user", userResponseDto);
-                    responseDto.Data.Add("token", _userService.GenerateJwtToken(user));
+                    responseDto.Data.Add("token", GenerateJSONWebToken(dbUser));
                 }
                 else 
                 {
@@ -102,16 +106,35 @@ namespace MusicManager.Server.Controller
         [HttpPost("login")]
         public async Task<ActionResult<BaseResponseDto>> Login([FromBody] UserDto user)
         {
-            var responseDto = await _userService.Authenticate(user);
+            var responseDto = new BaseResponseDto();
+            responseDto.StatusCode = HttpStatusCode.Unauthorized;
 
-            if(responseDto is null)
+            var dbUser = await _userRepository.GetByUsername(user.UserName);
+
+            if(dbUser != null)
             {
-                responseDto = new BaseResponseDto();
-                responseDto.Infos.Errors.Add("Invalid username or password!");
-                responseDto.StatusCode = HttpStatusCode.Unauthorized;
+                if(dbUser.Password == user.Password)
+                {
+                    var token = GenerateJSONWebToken(dbUser);
+                    responseDto.Data.Add("Token", token);
+                }
             }
 
             return StatusCode((int)responseDto.StatusCode, responseDto);
+        }
+
+        private string GenerateJSONWebToken(User user)
+        {
+            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
+            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
+
+            var token = new JwtSecurityToken(_config["Jwt:Issuer"],
+              _config["Jwt:Issuer"],
+              null,
+              expires: DateTime.Now.AddMinutes(120),
+              signingCredentials: credentials);
+
+            return new JwtSecurityTokenHandler().WriteToken(token);
         }
 
     }
