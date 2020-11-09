@@ -52,6 +52,8 @@ namespace MusicManager.Server.Controller
         {
             var responseDto = new BaseResponseDto();
 
+            System.Diagnostics.Debug.WriteLine(userId);
+
             User user = await _userRepository.GetById(userId);
 
             if(user is null) responseDto.StatusCode = HttpStatusCode.NotFound;
@@ -84,9 +86,9 @@ namespace MusicManager.Server.Controller
 
                     UserResponseDto userResponseDto = UserResponseDtoMapper.FromDb(await _userRepository.Insert(user));
 
-                    responseDto.Infos.Messages.Add("Successfully created user");
+                    responseDto.Infos.Messages.Add("Successfully created user.");
                     responseDto.Data.Add("user", userResponseDto);
-                    responseDto.Data.Add("token", GenerateJSONWebToken(dbUser));
+                    responseDto.Data.Add("token", GenerateJSONWebToken(user));
                 }
                 else 
                 {
