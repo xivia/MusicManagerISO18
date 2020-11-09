@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.IdentityModel.Tokens.Jwt;
 using System.Linq;
 using System.Net;
+using System.Security.Claims;
 using System.Text;
 using System.Threading.Tasks;
 using FluentValidation.Results;
@@ -121,7 +122,6 @@ namespace MusicManager.Server.Controller
                 return StatusCode((int)responseDto.StatusCode, responseDto);
             }
 
-
             var token = GenerateJSONWebToken(dbUser);
             responseDto.Data.Add("Token", token);
             responseDto.StatusCode = HttpStatusCode.OK;
@@ -167,7 +167,6 @@ namespace MusicManager.Server.Controller
                 responseDto.StatusCode = HttpStatusCode.NotFound;
             }
 
-
             return responseDto;
         }
 
@@ -176,9 +175,14 @@ namespace MusicManager.Server.Controller
             var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
             var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
 
+            var claims = new[]
+            {
+              new Claim(JwtRegisteredClaimNames.Sub, user.Name)
+            };
+
             var token = new JwtSecurityToken(_config["Jwt:Issuer"],
               _config["Jwt:Issuer"],
-              null,
+              claims,
               expires: DateTime.Now.AddMinutes(120),
               signingCredentials: credentials);
 
