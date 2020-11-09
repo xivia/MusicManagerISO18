@@ -164,6 +164,7 @@ namespace MusicManager.Server.Controller
             else
             {
                 responseDto.Infos.Errors.Add($"User with id {userId} has not been found.");
+                responseDto.StatusCode = HttpStatusCode.NotFound;
             }
 
 
