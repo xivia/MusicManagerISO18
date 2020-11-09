@@ -52,8 +52,6 @@ namespace MusicManager.Server.Controller
         {
             var responseDto = new BaseResponseDto();
 
-            System.Diagnostics.Debug.WriteLine(userId);
-
             User user = await _userRepository.GetById(userId);
 
             if(user is null) responseDto.StatusCode = HttpStatusCode.NotFound;

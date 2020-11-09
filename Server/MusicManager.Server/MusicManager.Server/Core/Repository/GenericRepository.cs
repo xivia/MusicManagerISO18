@@ -43,20 +43,6 @@ namespace MusicManager.Server.Core.Repository
 
         public async Task<T> GetById(long id)
         {
-            await _entities.ForEachAsync(entity =>
-            {
-                Debug.WriteLine($"{typeof(T).Name}Id");
-
-                var a = (long)entity
-                                 .GetType()
-                                 .GetProperty($"{typeof(T).Name}Id")
-                                 .GetValue(entity, null);
-                Debug.WriteLine(a);
-
-                Debug.WriteLine($"{id} == {a}");
-                Debug.WriteLine(id == a);
-            });
-
             return await _entities
                             .Where(entity => (long) entity
                                 .GetType()
