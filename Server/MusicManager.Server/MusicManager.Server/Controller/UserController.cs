@@ -111,16 +111,63 @@ namespace MusicManager.Server.Controller
 
             var dbUser = await _userRepository.GetByUsername(user.UserName);
 
-            if(dbUser != null)
+            if(dbUser is null) return StatusCode((int)responseDto.StatusCode, responseDto);
+            
+            if(dbUser.Password != user.Password) return StatusCode((int)responseDto.StatusCode, responseDto);
+            
+            if(dbUser.Banned)
             {
-                if(dbUser.Password == user.Password)
-                {
-                    var token = GenerateJSONWebToken(dbUser);
-                    responseDto.Data.Add("Token", token);
-                }
+                responseDto.Infos.Errors.Add("You are banned!");
+                return StatusCode((int)responseDto.StatusCode, responseDto);
             }
 
+
+            var token = GenerateJSONWebToken(dbUser);
+            responseDto.Data.Add("Token", token);
+            responseDto.StatusCode = HttpStatusCode.OK;
+
             return StatusCode((int)responseDto.StatusCode, responseDto);
+        }
+
+        [Authorize]
+        [HttpPut("{userId}/ban")]
+        public async Task<ActionResult<BaseResponseDto>> Ban(long userId) 
+        {
+            var responseDto = await BanOrUnbanUser(userId, true);
+            return StatusCode((int)responseDto.StatusCode, responseDto);
+        }
+
+        [Authorize]
+        [HttpPut("{userId}/unban")]
+        public async Task<ActionResult<BaseResponseDto>> Unban(long userId)
+        {
+            var responseDto = await BanOrUnbanUser(userId, false);
+            return StatusCode((int)responseDto.StatusCode, responseDto);
+        }
+
+        private async Task<BaseResponseDto> BanOrUnbanUser(long userId, bool ban)
+        {
+            var responseDto = new BaseResponseDto();
+
+            var dbUser = await _userRepository.GetById(userId);
+
+            if (dbUser != null)
+            {
+                dbUser.Banned = true;
+
+                await _userRepository.Update(dbUser);
+
+                string text = ban ? "banned" : "unbanned";
+
+                responseDto.Infos.Messages.Add($"User with id {userId} has successfully been {text}");
+            }
+            else
+            {
+                responseDto.Infos.Errors.Add($"User with id {userId} has not been found.");
+            }
+
+
+            return responseDto;
         }
 
         private string GenerateJSONWebToken(User user)
