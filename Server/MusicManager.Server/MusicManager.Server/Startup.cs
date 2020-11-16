@@ -8,6 +8,7 @@ using MusicManager.Server.Core.Config;
 using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
+using MusicManager.Server.Core.Services;
 
 namespace MusicManager.Server
 {
@@ -35,6 +36,9 @@ namespace MusicManager.Server
             services.AddScoped<ISongRepository, SongRepository>();
             services.AddScoped<IPlaylistRepository, PlaylistRepository>();
             services.AddScoped<IGenreRepository, GenreRepository>();
+
+            // Services
+            services.AddScoped<IRequestDataService, RequestDataService>();
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
