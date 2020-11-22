@@ -37,7 +37,7 @@ namespace MusicManager.Server.Controller
         }
 
         [HttpPost]
-        //[Authorize]
+        [Authorize]
         public async Task<ActionResult<BaseResponseDto>> Create(GenreRequestDto genreRequestDto)
         {
             var responseDto = new BaseResponseDto();
