@@ -40,6 +40,7 @@ namespace MusicManager.Server
             // Services
             services.AddScoped<IRequestDataService, RequestDataService>();
             services.AddScoped<IUserService, UserService>();
+            services.AddScoped<IGenreService, GenreService>();
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>

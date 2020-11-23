@@ -4,6 +4,7 @@ using MusicManager.Server.Core.DataTransferObjects;
 using MusicManager.Server.Core.DataTransferObjects.GenreDtos;
 using MusicManager.Server.Core.Model;
 using MusicManager.Server.Core.Repository;
+using MusicManager.Server.Core.Services;
 using MusicManager.Server.Core.Validators;
 using System;
 using System.Collections.Generic;
@@ -17,22 +18,17 @@ namespace MusicManager.Server.Controller
     [ApiController]
     public class GenreController : ControllerBase
     {
-        private IGenreRepository _genreRepository;
+        private readonly IGenreService _genreService;
 
-        public GenreController(IGenreRepository genreRepository)
+        public GenreController(IGenreService genreService)
         {
-            _genreRepository = genreRepository;
+            _genreService = genreService;
         }
 
         [HttpGet]
         public async Task<ActionResult<BaseResponseDto>> Get()
         {
-            var responseDto = new BaseResponseDto();
-
-            var genres = await _genreRepository.GetAll();
-
-            responseDto.Data.Add("genres", genres);
-
+            var responseDto = await _genreService.GetAll();
             return StatusCode((int)responseDto.StatusCode, responseDto);
         }
 
@@ -40,38 +36,7 @@ namespace MusicManager.Server.Controller
         [Authorize]
         public async Task<ActionResult<BaseResponseDto>> Create(GenreRequestDto genreRequestDto)
         {
-            var responseDto = new BaseResponseDto();
-
-            GenreValidator validator = new GenreValidator();
-            var validationResult = await validator.ValidateAsync(genreRequestDto);
-
-            if(validationResult.IsValid)
-            {
-                var dbGenre = _genreRepository.GetByName(genreRequestDto.GenreName);
-
-                if(dbGenre is null)
-                {
-                    var newGenre = new Genre
-                    {
-                        Name = genreRequestDto.GenreName
-                    };
-
-                    var newDbGenre = await _genreRepository.Insert(newGenre);
-
-                    responseDto.Data.Add("genre", newDbGenre);
-                }
-                else
-                {
-                    responseDto.Infos.Errors.Add($"A Genre with the name {genreRequestDto.GenreName} exist already.");
-                    responseDto.StatusCode = HttpStatusCode.UnprocessableEntity;
-                }
-            }
-            else
-            {
-                responseDto.Infos.Errors.AddRange(validationResult.Errors.Select(error => error.ErrorMessage).ToList());
-                responseDto.StatusCode = HttpStatusCode.UnprocessableEntity;
-            }
-
+            var responseDto = await _genreService.Create(genreRequestDto);
             return StatusCode((int)responseDto.StatusCode, responseDto);
         }
     }

@@ -30,8 +30,8 @@ namespace MusicManager.Server.Core.Services
 
     public class UserService : IUserService
     {
-        private IUserRepository _userRepository;
-        private IConfiguration _config;
+        private readonly IUserRepository _userRepository;
+        private readonly IConfiguration _config;
 
         public UserService(IUserRepository userRepository, IConfiguration configuration)
         {
