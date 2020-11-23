@@ -17,6 +17,7 @@ using MusicManager.Server.Core.DataTransferObjects.Mapper;
 using MusicManager.Server.Core.DataTransferObjects.UserDtos;
 using MusicManager.Server.Core.Model;
 using MusicManager.Server.Core.Repository;
+using MusicManager.Server.Core.Services;
 using MusicManager.Server.Core.Validators;
 
 namespace MusicManager.Server.Controller
@@ -25,24 +26,17 @@ namespace MusicManager.Server.Controller
     [ApiController]
     public class UserController : ControllerBase
     {
-        private IUserRepository _userRepository;
-        private IConfiguration _config;
+        private IUserService _userService;
 
-        public UserController(IUserRepository userRepository, IConfiguration configuration)
+        public UserController(IUserService userService)
         {
-            _userRepository = userRepository;
-            _config = configuration;
+            _userService = userService;
         }
 
         [Authorize]
         public async Task<ActionResult<BaseResponseDto>> Get()
         {
-            var responseDto = new BaseResponseDto();
-
-            List<User> users = await _userRepository.GetAll();
-
-            responseDto.Data.Add("users", UserResponseDtoMapper.FromDb(users));
-
+            var responseDto = await _userService.GetAll();
             return StatusCode((int) responseDto.StatusCode, responseDto);
         }
 
@@ -50,81 +44,21 @@ namespace MusicManager.Server.Controller
         [HttpGet("{userId}")]
         public async Task<ActionResult<BaseResponseDto>> GetById(long userId)
         {
-            var responseDto = new BaseResponseDto();
-
-            User user = await _userRepository.GetById(userId);
-
-            if(user is null) responseDto.StatusCode = HttpStatusCode.NotFound;
-
-            responseDto.Data.Add("user", UserResponseDtoMapper.FromDb(user));
-
+            var responseDto = await _userService.GetById(userId);
             return StatusCode((int)responseDto.StatusCode, responseDto);
         }
 
         [HttpPost]
         public async Task<ActionResult<BaseResponseDto>> Create([FromBody] UserDto userDto)
         {
-            var responseDto = new BaseResponseDto();
-
-            UserDtoValidator userDtoValidator = new UserDtoValidator();
-            ValidationResult validationResult = userDtoValidator.Validate(userDto);
-
-            if(validationResult.IsValid)
-            {
-                var dbUser = await _userRepository.GetByUsername(userDto.UserName);
-
-                if (dbUser is null)
-                {
-                    User user = new User
-                    {
-                        Name = userDto.UserName,
-                        Password = userDto.Password,
-                        Banned = false
-                    };
-
-                    UserResponseDto userResponseDto = UserResponseDtoMapper.FromDb(await _userRepository.Insert(user));
-
-                    responseDto.Infos.Messages.Add("Successfully created user.");
-                    responseDto.Data.Add("user", userResponseDto);
-                    responseDto.Data.Add("token", GenerateJSONWebToken(user));
-                }
-                else 
-                {
-                    responseDto.Infos.Errors.Add("A user with that username exists already.");
-                    responseDto.StatusCode = HttpStatusCode.Conflict;
-                }
-            }  
-            else
-            {
-                var joinedErrors = validationResult.Errors.Join(";");
-                responseDto.Infos.Errors.AddRange(joinedErrors.Split(";").ToList());
-                responseDto.StatusCode = HttpStatusCode.BadRequest;
-            }
-
+            var responseDto = await _userService.Create(userDto);
             return StatusCode((int)responseDto.StatusCode, responseDto);
         }
 
         [HttpPost("login")]
         public async Task<ActionResult<BaseResponseDto>> Login([FromBody] UserDto user)
         {
-            var responseDto = new BaseResponseDto();
-            responseDto.StatusCode = HttpStatusCode.Unauthorized;
-
-            var dbUser = await _userRepository.GetByUsername(user.UserName);
-
-            if(dbUser is null) return StatusCode((int)responseDto.StatusCode, responseDto);
-            
-            if(dbUser.Password != user.Password) return StatusCode((int)responseDto.StatusCode, responseDto);
-            
-            if(dbUser.Banned)
-            {
-                responseDto.Infos.Errors.Add("You are banned!");
-                return StatusCode((int)responseDto.StatusCode, responseDto);
-            }
-
-            var token = GenerateJSONWebToken(dbUser);
-            responseDto.Data.Add("Token", token);
-            responseDto.StatusCode = HttpStatusCode.OK;
+            var responseDto = await _userService.Login(user);
 
             return StatusCode((int)responseDto.StatusCode, responseDto);
         }
