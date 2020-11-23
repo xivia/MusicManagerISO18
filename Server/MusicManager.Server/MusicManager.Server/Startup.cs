@@ -37,10 +37,9 @@ namespace MusicManager.Server
             services.AddScoped<IPlaylistRepository, PlaylistRepository>();
             services.AddScoped<IGenreRepository, GenreRepository>();
 
-            services.AddScoped<IUserService, UserService>();
-
             // Services
             services.AddScoped<IRequestDataService, RequestDataService>();
+            services.AddScoped<IUserService, UserService>();
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
