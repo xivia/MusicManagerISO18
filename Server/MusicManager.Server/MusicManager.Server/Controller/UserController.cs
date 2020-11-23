@@ -59,7 +59,6 @@ namespace MusicManager.Server.Controller
         public async Task<ActionResult<BaseResponseDto>> Login([FromBody] UserDto user)
         {
             var responseDto = await _userService.Login(user);
-
             return StatusCode((int)responseDto.StatusCode, responseDto);
         }
 
@@ -67,7 +66,7 @@ namespace MusicManager.Server.Controller
         [HttpPut("{userId}/ban")]
         public async Task<ActionResult<BaseResponseDto>> Ban(long userId) 
         {
-            var responseDto = await BanOrUnbanUser(userId, true);
+            var responseDto = await _userService.BanOrUnbanUser(userId, true);
             return StatusCode((int)responseDto.StatusCode, responseDto);
         }
 
@@ -75,53 +74,8 @@ namespace MusicManager.Server.Controller
         [HttpPut("{userId}/unban")]
         public async Task<ActionResult<BaseResponseDto>> Unban(long userId)
         {
-            var responseDto = await BanOrUnbanUser(userId, false);
+            var responseDto = await _userService.BanOrUnbanUser(userId, false);
             return StatusCode((int)responseDto.StatusCode, responseDto);
         }
-
-        private async Task<BaseResponseDto> BanOrUnbanUser(long userId, bool ban)
-        {
-            var responseDto = new BaseResponseDto();
-
-            var dbUser = await _userRepository.GetById(userId);
-
-            if (dbUser != null)
-            {
-                dbUser.Banned = true;
-
-                await _userRepository.Update(dbUser);
-
-                string text = ban ? "banned" : "unbanned";
-
-                responseDto.Infos.Messages.Add($"User with id {userId} has successfully been {text}");
-            }
-            else
-            {
-                responseDto.Infos.Errors.Add($"User with id {userId} has not been found.");
-                responseDto.StatusCode = HttpStatusCode.NotFound;
-            }
-
-            return responseDto;
-        }
-
-        private string GenerateJSONWebToken(User user)
-        {
-            var securityKey = new SymmetricSecurityKey(Encoding.UTF8.GetBytes(_config["Jwt:Key"]));
-            var credentials = new SigningCredentials(securityKey, SecurityAlgorithms.HmacSha256);
-
-            var claims = new[]
-            {
-              new Claim(JwtRegisteredClaimNames.Sub, user.Name)
-            };
-
-            var token = new JwtSecurityToken(_config["Jwt:Issuer"],
-              _config["Jwt:Issuer"],
-              claims,
-              expires: DateTime.Now.AddMinutes(120),
-              signingCredentials: credentials);
-
-            return new JwtSecurityTokenHandler().WriteToken(token);
-        }
-
     }
 }

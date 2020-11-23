@@ -25,6 +25,7 @@ namespace MusicManager.Server.Core.Services
         Task<BaseResponseDto> GetById(long userId);
         Task<BaseResponseDto> Create(UserDto userDto);
         Task<BaseResponseDto> Login(UserDto user);
+        Task<BaseResponseDto> BanOrUnbanUser(long userId, bool ban);
     }
 
     public class UserService : IUserService
@@ -69,37 +70,35 @@ namespace MusicManager.Server.Core.Services
             UserDtoValidator userDtoValidator = new UserDtoValidator();
             ValidationResult validationResult = userDtoValidator.Validate(userDto);
 
-            if (validationResult.IsValid)
-            {
-                var dbUser = await _userRepository.GetByUsername(userDto.UserName);
-
-                if (dbUser is null)
-                {
-                    User user = new User
-                    {
-                        Name = userDto.UserName,
-                        Password = userDto.Password,
-                        Banned = false
-                    };
-
-                    UserResponseDto userResponseDto = UserResponseDtoMapper.FromDb(await _userRepository.Insert(user));
-
-                    responseDto.Infos.Messages.Add("Successfully created user.");
-                    responseDto.Data.Add("user", userResponseDto);
-                    responseDto.Data.Add("token", GenerateJSONWebToken(user));
-                }
-                else
-                {
-                    responseDto.Infos.Errors.Add("A user with that username exists already.");
-                    responseDto.StatusCode = HttpStatusCode.Conflict;
-                }
-            }
-            else
+            if(!validationResult.IsValid)
             {
                 var joinedErrors = validationResult.Errors.Join(";");
                 responseDto.Infos.Errors.AddRange(joinedErrors.Split(";").ToList());
-                responseDto.StatusCode = HttpStatusCode.BadRequest;
+                responseDto.StatusCode = HttpStatusCode.UnprocessableEntity;
+                return responseDto;
             }
+
+            var dbUser = await _userRepository.GetByUsername(userDto.UserName);
+
+            if (dbUser != null)
+            {
+                responseDto.Infos.Errors.Add("A user with that username exists already.");
+                responseDto.StatusCode = HttpStatusCode.Conflict;
+                return responseDto;
+            }
+
+            User user = new User
+            {
+                Name = userDto.UserName,
+                Password = userDto.Password,
+                Banned = false
+            };
+
+            UserResponseDto userResponseDto = UserResponseDtoMapper.FromDb(await _userRepository.Insert(user));
+
+            responseDto.Infos.Messages.Add("Successfully created user.");
+            responseDto.Data.Add("user", userResponseDto);
+            responseDto.Data.Add("token", GenerateJSONWebToken(user));
 
             return responseDto;
         }
@@ -145,6 +144,31 @@ namespace MusicManager.Server.Core.Services
               signingCredentials: credentials);
 
             return new JwtSecurityTokenHandler().WriteToken(token);
+        }
+
+        public async Task<BaseResponseDto> BanOrUnbanUser(long userId, bool ban)
+        {
+            var responseDto = new BaseResponseDto();
+
+            var dbUser = await _userRepository.GetById(userId);
+
+            if (dbUser != null)
+            {
+                dbUser.Banned = true;
+
+                await _userRepository.Update(dbUser);
+
+                string text = ban ? "banned" : "unbanned";
+
+                responseDto.Infos.Messages.Add($"User with id {userId} has successfully been {text}");
+            }
+            else
+            {
+                responseDto.Infos.Errors.Add($"User with id {userId} has not been found.");
+                responseDto.StatusCode = HttpStatusCode.NotFound;
+            }
+
+            return responseDto;
         }
 
     }
