@@ -72,8 +72,7 @@ namespace MusicManager.Server.Core.Services
 
             if(!validationResult.IsValid)
             {
-                var joinedErrors = validationResult.Errors.Join(";");
-                responseDto.Infos.Errors.AddRange(joinedErrors.Split(";").ToList());
+                responseDto.Infos.Errors.AddRange(validationResult.Errors.Select(error => error.ErrorMessage));
                 responseDto.StatusCode = HttpStatusCode.UnprocessableEntity;
                 return responseDto;
             }
