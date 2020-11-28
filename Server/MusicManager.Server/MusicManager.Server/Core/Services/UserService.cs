@@ -170,7 +170,7 @@ namespace MusicManager.Server.Core.Services
 
             if (dbUser != null)
             {
-                dbUser.Banned = true;
+                dbUser.Banned = ban;
 
                 await _userRepository.Update(dbUser);
 
