@@ -23,8 +23,12 @@ namespace MusicManager.Server.Core.Validators
                     .WithMessage("Password can't be longer than 128 characters!")
                 .MinimumLength(8)
                     .WithMessage("Your password has to be atleast 8 characters long!");
-                //.Matches(@"^(?!.([A-Za-z0-9])\1{1})(?=.?[A-Z])(?=.?[a-z])(?=.?[0-9])(?=.?[#?!@$%^&-]).{8,}$")
-                //    .WithMessage("Your password has to be atleast 8 characters long, contain atleast 1 unique char, contain atleast 1 digit, 1 lowercase character, 1 upper case character and 1 special character.");
+            //.Matches(@"^(?!.([A-Za-z0-9])\1{1})(?=.?[A-Z])(?=.?[a-z])(?=.?[0-9])(?=.?[#?!@$%^&-]).{8,}$")
+            //    .WithMessage("Your password has to be atleast 8 characters long, contain atleast 1 unique char, contain atleast 1 digit, 1 lowercase character, 1 upper case character and 1 special character.");
+            RuleFor(user => user.EmailAddress)
+                .NotEmpty()
+                    .WithMessage("Email Address can't be empty!")
+                .EmailAddress();
         }
     }
 }

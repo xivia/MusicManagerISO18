@@ -24,7 +24,7 @@ namespace MusicManager.Server.Core.Services
         Task<BaseResponseDto> GetAll();
         Task<BaseResponseDto> GetById(long userId);
         Task<BaseResponseDto> Create(UserDto userDto);
-        Task<BaseResponseDto> Login(UserDto user);
+        Task<BaseResponseDto> Login(UserLoginDto user);
         Task<BaseResponseDto> BanOrUnbanUser(long userId, bool ban);
     }
 
@@ -91,6 +91,8 @@ namespace MusicManager.Server.Core.Services
             {
                 Name = userDto.UserName,
                 Password = userDto.Password,
+                FailedLoginAttempts = 0,
+                EmailAddress = userDto.EmailAddress,
                 Banned = false
             };
 
@@ -103,22 +105,37 @@ namespace MusicManager.Server.Core.Services
             return responseDto;
         }
 
-        public async Task<BaseResponseDto> Login(UserDto user)
+        public async Task<BaseResponseDto> Login(UserLoginDto user)
         {
             var responseDto = new BaseResponseDto();
             responseDto.StatusCode = HttpStatusCode.Unauthorized;
 
-            var dbUser = await _userRepository.GetByUsername(user.UserName);
+            var dbUser = await _userRepository.GetByUsername(user.Username);
 
             if (dbUser is null) return responseDto;
 
-            if (dbUser.Password != user.Password) return responseDto;
+            if (dbUser.FailedLoginAttempts > 2)
+            {
+                responseDto.Infos.Errors.Add("Your account has been locked due to suspicious activity");
+                return responseDto;
+            }
+
+            if (dbUser.Password != user.Password)
+            {
+                // TODO: Generate Link to unlock account and send to email of account owner
+                dbUser.FailedLoginAttempts++;
+                await _userRepository.Update(dbUser);
+                return responseDto;
+            }
 
             if (dbUser.Banned)
             {
                 responseDto.Infos.Errors.Add("You are banned!");
                 return responseDto;
             }
+
+            dbUser.FailedLoginAttempts = 0;
+            await _userRepository.Update(dbUser);
 
             var token = GenerateJSONWebToken(dbUser);
             responseDto.Data.Add("Token", token);

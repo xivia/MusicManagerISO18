@@ -56,7 +56,7 @@ namespace MusicManager.Server.Controller
         }
 
         [HttpPost("login")]
-        public async Task<ActionResult<BaseResponseDto>> Login([FromBody] UserDto user)
+        public async Task<ActionResult<BaseResponseDto>> Login([FromBody] UserLoginDto user)
         {
             var responseDto = await _userService.Login(user);
             return StatusCode((int)responseDto.StatusCode, responseDto);

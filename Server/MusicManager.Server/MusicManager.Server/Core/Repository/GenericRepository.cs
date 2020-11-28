@@ -60,27 +60,10 @@ namespace MusicManager.Server.Core.Repository
 
         public async Task<bool> Update(T value)
         {
-            bool isUpdated = false;
+            _context.Entry(value).State = EntityState.Modified;
+            await _context.SaveChangesAsync();
 
-            var dbEntity = await _entities
-                            .FirstOrDefaultAsync(entity => 
-                                (long) entity
-                                    .GetType()
-                                    .GetProperty($"{typeof(T).Name}Id")
-                                    .GetValue(entity, null) 
-                                    == 
-                                (long) value.GetType()
-                                    .GetProperty($"{typeof(T).Name}Id")
-                                    .GetValue(entity, null));
-
-            if (!(dbEntity is null))
-            {
-                _context.Entry(dbEntity).CurrentValues.SetValues(value);
-                await _context.SaveChangesAsync();
-                isUpdated = true;
-            }
-
-            return isUpdated;
+            return true; // Remove some time
         }
     }
 }

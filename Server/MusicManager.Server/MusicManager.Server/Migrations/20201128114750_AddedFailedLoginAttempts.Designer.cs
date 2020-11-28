@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MusicManger.Server.Core.Infrastructure;
 
 namespace MusicManager.Server.Migrations
 {
     [DbContext(typeof(MusicManagerContext))]
-    partial class MusicManagerContextModelSnapshot : ModelSnapshot
+    [Migration("20201128114750_AddedFailedLoginAttempts")]
+    partial class AddedFailedLoginAttempts
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -104,8 +106,6 @@ namespace MusicManager.Server.Migrations
                         .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
 
                     b.Property<bool>("Banned");
-
-                    b.Property<string>("EmailAddress");
 
                     b.Property<int>("FailedLoginAttempts");
 

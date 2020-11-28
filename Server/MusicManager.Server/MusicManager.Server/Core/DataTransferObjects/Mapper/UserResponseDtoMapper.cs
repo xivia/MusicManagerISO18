@@ -16,6 +16,7 @@ namespace MusicManager.Server.Core.DataTransferObjects.Mapper
                 {
                     UserId = user.UserId,
                     Name = user.Name,
+                    EmailAddress = user.EmailAddress,
                     Banned = user.Banned
                 });
             });
@@ -32,6 +33,7 @@ namespace MusicManager.Server.Core.DataTransferObjects.Mapper
             {
                 UserId = dbUser.UserId,
                 Name = dbUser.Name,
+                EmailAddress = dbUser.EmailAddress,
                 Banned = dbUser.Banned
             };
         }
