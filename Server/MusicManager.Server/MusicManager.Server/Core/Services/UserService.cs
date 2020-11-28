@@ -113,6 +113,12 @@ namespace MusicManager.Server.Core.Services
 
             if (dbUser is null) return responseDto;
 
+            if (dbUser.Banned)
+            {
+                responseDto.Infos.Errors.Add("You are banned!");
+                return responseDto;
+            }
+
             if (dbUser.FailedLoginAttempts > 2)
             {
                 responseDto.Infos.Errors.Add("Your account has been locked due to suspicious activity");
@@ -124,12 +130,6 @@ namespace MusicManager.Server.Core.Services
                 // TODO: Generate Link to unlock account and send to email of account owner
                 dbUser.FailedLoginAttempts++;
                 await _userRepository.Update(dbUser);
-                return responseDto;
-            }
-
-            if (dbUser.Banned)
-            {
-                responseDto.Infos.Errors.Add("You are banned!");
                 return responseDto;
             }
 
