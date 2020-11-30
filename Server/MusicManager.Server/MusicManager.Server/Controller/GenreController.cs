@@ -2,14 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using MusicManager.Server.Core.DataTransferObjects;
 using MusicManager.Server.Core.DataTransferObjects.GenreDtos;
-using MusicManager.Server.Core.Model;
-using MusicManager.Server.Core.Repository;
 using MusicManager.Server.Core.Services;
-using MusicManager.Server.Core.Validators;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net;
 using System.Threading.Tasks;
 
 namespace MusicManager.Server.Controller

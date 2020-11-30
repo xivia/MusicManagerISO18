@@ -1,24 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.IdentityModel.Tokens.Jwt;
-using System.Linq;
-using System.Net;
-using System.Security.Claims;
-using System.Text;
-using System.Threading.Tasks;
-using FluentValidation.Results;
+﻿using System.Threading.Tasks;
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
-using Microsoft.EntityFrameworkCore.Internal;
-using Microsoft.Extensions.Configuration;
-using Microsoft.IdentityModel.Tokens;
 using MusicManager.Server.Core.DataTransferObjects;
-using MusicManager.Server.Core.DataTransferObjects.Mapper;
 using MusicManager.Server.Core.DataTransferObjects.UserDtos;
-using MusicManager.Server.Core.Model;
-using MusicManager.Server.Core.Repository;
 using MusicManager.Server.Core.Services;
-using MusicManager.Server.Core.Validators;
 
 namespace MusicManager.Server.Controller
 {
