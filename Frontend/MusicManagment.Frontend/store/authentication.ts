@@ -28,7 +28,7 @@ export const actions: ActionTree<RootState, RootState> = {
     async register({commit}, data) {
         const response = await this.$axios.$post('/api/user', {
             username: data.userName,
-            email: data.email,
+            emailAddress: data.email,
             password: data.password
         });
 
