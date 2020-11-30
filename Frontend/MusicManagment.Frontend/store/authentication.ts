@@ -5,6 +5,7 @@ export const state = () => ({
     token: String,
     tokenData: {},
     userName: '',
+    email: '',
 })
 
 export type RootState = ReturnType<typeof state>
@@ -12,19 +13,22 @@ export type RootState = ReturnType<typeof state>
 export const getters: GetterTree<RootState, RootState> = {
     isAuthenticated: state => state.isAuthenticated,
     token: state => state.token,
-    userName: state => state.userName
+    userName: state => state.userName,
+    email: state => state.email
 }
 
 export const mutations: MutationTree<RootState> = {
     CHANGE_ISAUTHENTICATED: (state, newIsAuthenticated) => (state.isAuthenticated = newIsAuthenticated),
     CHANGE_TOKEN: (state, newToken) => (state.token = newToken),
     CHANGE_USERNAME: (state, newUserName) => (state.userName = newUserName),
+    CHANGE_EMAIL: (state, newEmail) => (state.email = newEmail)
 }
 
 export const actions: ActionTree<RootState, RootState> = {
     async register({commit}, data) {
         const response = await this.$axios.$post('/api/user', {
             username: data.userName,
+            email: data.email,
             password: data.password
         });
 
@@ -32,6 +36,7 @@ export const actions: ActionTree<RootState, RootState> = {
         if (!response.infos.hasErrors) {
             alert('Success now login');
             commit('CHANGE_USERNAME', data.userName);
+            commit('CHANGE_EMAIL', data.email);
             this.$router.push('/login');
         } else {
             console.error(response);

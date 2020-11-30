@@ -16,6 +16,14 @@
                     "alphaNum": "Benutzername hat unerlaupte buchstaben"
                 }
             },
+            "email": {
+                "name": "Email",
+                "validation": {
+                    "required": "muss vohanden sein",
+                    "minLength": "Email ist zu kurtz",
+                    "email": "Email ist keine email"
+                }
+            },
             "password": {
                 "name": "Password",
                 "validation": {
