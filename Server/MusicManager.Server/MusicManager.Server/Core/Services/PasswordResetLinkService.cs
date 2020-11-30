@@ -3,6 +3,7 @@ using MusicManager.Server.Core.DataTransferObjects;
 using MusicManager.Server.Core.DataTransferObjects.PasswordResetLinkDtos;
 using MusicManager.Server.Core.Model;
 using MusicManager.Server.Core.Repository;
+using MusicManager.Server.Core.Validators;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -51,7 +52,7 @@ namespace MusicManager.Server.Core.Services
                     user.EmailAddress
                 },
                 "Password Reset",
-                $"Your account has been locked due to suspicious activity after 3 failed login attempts. Your password reset link is {_configuration["Hostname"]}/reset/{passwordResetLink.LinkGuid}"
+                $"Hello {user.Name} your account has been locked due to suspicious activity after 3 failed login attempts. Your password reset link is {_configuration["Hostname"]}/reset/{passwordResetLink.LinkGuid}"
             );
 
             await _passwordResetLinkRepository.Insert(passwordResetLink);
@@ -81,7 +82,16 @@ namespace MusicManager.Server.Core.Services
             var dbPasswordResetLink = await _passwordResetLinkRepository.GetResetLinkByLinkGuid(passwordResetLinkRequestDto.LinkGuid);
             User dbUser = dbPasswordResetLink.User;
 
-            // TODO: Validate Password
+            PasswordResetLinkRequestDtoValidator passwordResetLinkRequestDtoValidator = new PasswordResetLinkRequestDtoValidator();
+            var validationResult = await passwordResetLinkRequestDtoValidator.ValidateAsync(passwordResetLinkRequestDto);
+
+            if(!validationResult.IsValid)
+            {
+                response.Infos.Errors.AddRange(validationResult.Errors.Select(result => result.ErrorMessage));
+                response.StatusCode = HttpStatusCode.UnprocessableEntity;
+                return response;
+            }
+
             dbUser.Password = passwordResetLinkRequestDto.Password;
 
             await _userRepository.Update(dbUser);
