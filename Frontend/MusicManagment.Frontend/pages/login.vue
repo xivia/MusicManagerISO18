@@ -1,5 +1,6 @@
 <template>
   <div>
-      <Login />
+    <Login />
+    <Audio></Audio>
   </div>
 </template>

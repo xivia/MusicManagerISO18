@@ -19,11 +19,13 @@ export default {
 
   // Global CSS (https://go.nuxtjs.dev/config-css)
   css: [
+    'plyr/dist/plyr.css'
   ],
 
   // Plugins to run before rendering page (https://go.nuxtjs.dev/config-plugins)
   plugins: [
-    '~/plugins/vuelidate.ts'
+    '~/plugins/vuelidate.ts',
+    { src: '~/plugins/video-player.js', mode: 'client' }
   ],
 
   // Auto import components (https://go.nuxtjs.dev/config-components)
