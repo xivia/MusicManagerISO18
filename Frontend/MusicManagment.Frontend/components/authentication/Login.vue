@@ -14,7 +14,7 @@
         <div class="field">
             <label class="label">{{ $t('login.form.password.name') }}</label>
             <div class="control">
-                <input class="input" v-bind:class="{ 'is-danger': $v.password.$invalid }" type="text" v-model="password" :placeholder="$t('login.form.password.name')">
+                <input class="input" v-bind:class="{ 'is-danger': $v.password.$invalid }" type="password" v-model="password" :placeholder="$t('login.form.password.name')">
             </div>
             <p class="help is-danger" v-if="!$v.password.required">{{ $t('login.form.password.validation.required') }}</p>
             <p class="help is-danger" v-if="!$v.password.minLength">{{ $t('login.form.password.validation.minLength') }}</p>

@@ -12,9 +12,18 @@
             <p class="help is-danger" v-if="!$v.userName.alphaNum">{{ $t('register.form.userName.validation.alphaNum') }}</p>
         </div>
         <div class="field">
+            <label class="label">{{ $t('register.form.email.name') }}</label>
+            <div class="control">
+                <input class="input" v-bind:class="{ 'is-danger': $v.email.$invalid }" type="text" v-model="email" :placeholder="$t('register.form.email.name')">
+            </div>
+            <p class="help is-danger" v-if="!$v.email.required">{{ $t('register.form.email.validation.required') }}</p>
+            <p class="help is-danger" v-if="!$v.email.minLength">{{ $t('register.form.email.validation.minLength') }}</p>
+            <p class="help is-danger" v-if="!$v.email.email">{{ $t('register.form.email.validation.email') }}</p>
+        </div>
+        <div class="field">
             <label class="label">{{ $t('register.form.password.name') }}</label>
             <div class="control">
-                <input class="input" v-bind:class="{ 'is-danger': $v.password.$invalid }" type="text" v-model="password" :placeholder="$t('register.form.password.name')">
+                <input class="input" v-bind:class="{ 'is-danger': $v.password.$invalid }" type="password" v-model="password" :placeholder="$t('register.form.password.name')">
             </div>
             <p class="help is-danger" v-if="!$v.password.required">{{ $t('register.form.password.validation.required') }}</p>
             <p class="help is-danger" v-if="!$v.password.minLength">{{ $t('register.form.password.validation.minLength') }}</p>
@@ -33,7 +42,7 @@
 
 <script lang='ts'>
 import Vue from 'vue'
-import { required, minLength, maxLength, alphaNum } from 'vuelidate/lib/validators'
+import { required, minLength, maxLength, alphaNum, email } from 'vuelidate/lib/validators'
 
 export default Vue.extend({
   name: 'Register',
@@ -51,6 +60,11 @@ export default Vue.extend({
       required,
       minLength: minLength(4),
     },
+    email: {
+      required,
+      email,
+      minLength: minLength(4),
+    },
     password: {
       required,
       minLength: minLength(8),
@@ -63,13 +77,15 @@ export default Vue.extend({
       if (!this.$v.$invalid) {
         this.$store.dispatch('authentication/register', {
           userName: this.$data.userName,
+          email: this.$data.email,
           password: this.$data.password
         })
       }
     },
     reset(): void {
-      this.$data.userName = ''
-      this.$data.password = ''
+      this.$data.userName = '';
+      this.$data.email = '';
+      this.$data.password = '';
     },
   }
 })
