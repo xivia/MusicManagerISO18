@@ -28,6 +28,7 @@ namespace MusicManager.Server
             services.AddCors();
 
             services.Configure<AppSettings>(Configuration.GetSection("AppSettings"));
+            services.Configure<SmtpSettings>(Configuration.GetSection("SmtpSettings"));
 
             services.AddDbContext<MusicManagerContext>();
 
@@ -41,6 +42,7 @@ namespace MusicManager.Server
             services.AddScoped<IRequestDataService, RequestDataService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IGenreService, GenreService>();
+            services.AddScoped<IEmailService, EmailService>();
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
