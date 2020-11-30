@@ -2,6 +2,7 @@
 using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
 using MusicManager.Server.Core.DataTransferObjects;
+using MusicManager.Server.Core.DataTransferObjects.PasswordResetLinkDtos;
 using MusicManager.Server.Core.DataTransferObjects.UserDtos;
 using MusicManager.Server.Core.Services;
 
@@ -11,11 +12,13 @@ namespace MusicManager.Server.Controller
     [ApiController]
     public class UserController : ControllerBase
     {
-        private IUserService _userService;
+        private readonly IUserService _userService;
+        private readonly IPasswordResetLinkService _passwordResetLinkService;
 
-        public UserController(IUserService userService)
+        public UserController(IUserService userService, IPasswordResetLinkService passwordResetLinkService)
         {
             _userService = userService;
+            _passwordResetLinkService = passwordResetLinkService;
         }
 
         [Authorize]
@@ -44,6 +47,13 @@ namespace MusicManager.Server.Controller
         public async Task<ActionResult<BaseResponseDto>> Login([FromBody] UserLoginDto user)
         {
             var responseDto = await _userService.Login(user);
+            return StatusCode((int)responseDto.StatusCode, responseDto);
+        }
+
+        [HttpPost("reset")]
+        public async Task<ActionResult<BaseResponseDto>> ResetPassword([FromBody] PasswordResetLinkRequestDto passwordResetLinkRequestDto)
+        {
+            var responseDto = await _passwordResetLinkService.ResetPassword(passwordResetLinkRequestDto);
             return StatusCode((int)responseDto.StatusCode, responseDto);
         }
 

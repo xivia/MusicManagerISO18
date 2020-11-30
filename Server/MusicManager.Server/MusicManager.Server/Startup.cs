@@ -9,6 +9,9 @@ using Microsoft.AspNetCore.Authentication.JwtBearer;
 using Microsoft.IdentityModel.Tokens;
 using System.Text;
 using MusicManager.Server.Core.Services;
+using MusicManager.Server.Core.Model;
+using Microsoft.AspNetCore.Identity;
+using System;
 
 namespace MusicManager.Server
 {
@@ -37,12 +40,14 @@ namespace MusicManager.Server
             services.AddScoped<ISongRepository, SongRepository>();
             services.AddScoped<IPlaylistRepository, PlaylistRepository>();
             services.AddScoped<IGenreRepository, GenreRepository>();
+            services.AddScoped<IPasswordResetLinkRepository, PasswordResetLinkRepository>();
 
             // Services
             services.AddScoped<IRequestDataService, RequestDataService>();
             services.AddScoped<IUserService, UserService>();
             services.AddScoped<IGenreService, GenreService>();
             services.AddScoped<IEmailService, EmailService>();
+            services.AddScoped<IPasswordResetLinkService, PasswordResetLinkService>();
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>

@@ -12,7 +12,7 @@ namespace MusicManager.Server.Core.Services
 {
     public interface IEmailService
     {
-        void SendEmail(string fromAddress, List<string> recipients, string subject, string body);
+        Task SendEmail(string fromAddress, List<string> recipients, string subject, string body);
     }
 
     public class EmailService : IEmailService
@@ -26,7 +26,7 @@ namespace MusicManager.Server.Core.Services
             _smtpClient = InitializeSmtpClient();
         }
 
-        public async void SendEmail(string fromAddress, List<string> recipients, string subject, string body)
+        public async Task SendEmail(string fromAddress, List<string> recipients, string subject, string body)
         {
             try
             {

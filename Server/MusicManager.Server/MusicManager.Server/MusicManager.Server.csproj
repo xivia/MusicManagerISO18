@@ -7,10 +7,11 @@
   <ItemGroup>
     <Compile Remove="Migrations\20201026210304_Initial.cs" />
     <Compile Remove="Migrations\20201026210304_Initial.Designer.cs" />
+    <Compile Remove="Migrations\20201130171330_PasswordResetLink.cs" />
+    <Compile Remove="Migrations\20201130171330_PasswordResetLink.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
-    <Folder Include="Services\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>
 

@@ -32,11 +32,14 @@ namespace MusicManager.Server.Core.Services
     {
         private readonly IUserRepository _userRepository;
         private readonly IConfiguration _config;
+        private readonly IPasswordResetLinkService _passwordResetLinkService;
 
-        public UserService(IUserRepository userRepository, IConfiguration configuration)
+        // TODO: Refactor IConfiguration to IOptions<JwtSettings> as in the other settings (ex. SmtpSettings)
+        public UserService(IUserRepository userRepository, IConfiguration configuration, IPasswordResetLinkService passwordResetLinkService)
         {
             _userRepository = userRepository;
             _config = configuration;
+            _passwordResetLinkService = passwordResetLinkService;
         }
 
         public async Task<BaseResponseDto> GetAll()
@@ -127,8 +130,14 @@ namespace MusicManager.Server.Core.Services
 
             if (dbUser.Password != user.Password)
             {
-                // TODO: Generate Link to unlock account and send to email of account owner
                 dbUser.FailedLoginAttempts++;
+
+                if(dbUser.FailedLoginAttempts > 2) 
+                {
+                    // Generate unlock link and send it
+                    await _passwordResetLinkService.GenerateResetLink(dbUser);
+                }
+
                 await _userRepository.Update(dbUser);
                 return responseDto;
             }

@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MusicManger.Server.Core.Infrastructure;
 
 namespace MusicManager.Server.Migrations
 {
     [DbContext(typeof(MusicManagerContext))]
-    partial class MusicManagerContextModelSnapshot : ModelSnapshot
+    [Migration("20201130171514_AddedPasswordResetLink")]
+    partial class AddedPasswordResetLink
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
