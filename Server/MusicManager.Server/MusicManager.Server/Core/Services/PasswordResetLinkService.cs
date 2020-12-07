@@ -92,6 +92,7 @@ namespace MusicManager.Server.Core.Services
                 return response;
             }
 
+            dbUser.FailedLoginAttempts = 0;
             dbUser.Password = passwordResetLinkRequestDto.Password;
 
             await _userRepository.Update(dbUser);
