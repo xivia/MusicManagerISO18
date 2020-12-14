@@ -50,6 +50,7 @@ export default Vue.extend({
   data() {
     return {
       userName: '',
+      email: '',
       password: '',
     }
   },
@@ -69,7 +70,7 @@ export default Vue.extend({
       required,
       minLength: minLength(8),
       maxLength: maxLength(18)
-    },
+    }
   },
   
   methods: {
