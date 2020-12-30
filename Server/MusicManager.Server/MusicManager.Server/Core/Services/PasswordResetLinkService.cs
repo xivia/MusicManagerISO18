@@ -48,9 +48,7 @@ namespace MusicManager.Server.Core.Services
 
             await _emailService.SendEmail(
                 "password-reset@music-manager.cc",
-                new List<string> { 
-                    user.EmailAddress
-                },
+                user.EmailAddress,
                 "Password Reset",
                 $"Hello {user.Name} your account has been locked due to suspicious activity after 3 failed login attempts. Your password reset link is {_configuration["Hostname"]}/reset/{passwordResetLink.LinkGuid}"
             );
