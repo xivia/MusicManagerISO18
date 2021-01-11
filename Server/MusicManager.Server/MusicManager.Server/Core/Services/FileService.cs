@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Http;
+﻿using FluentValidation;
+using Microsoft.AspNetCore.Http;
 using MusicManager.Server.Core.DataTransferObjects;
 using System;
 using System.Collections.Generic;
@@ -10,19 +11,24 @@ namespace MusicManager.Server.Core.Services
 {
     public interface IFileService
     {
-        Task<BaseResponseDto> UploadFile(IFormFile file, string uploadDirectory);
+        Task<BaseResponseDto> UploadFile(IFormFile file, string uploadDirectory, AbstractValidator<IFormFile> validator);
     }
 
     public class FileService : IFileService
     {
 
-        public async Task<BaseResponseDto> UploadFile(IFormFile file, string uploadDirectory)
+        public async Task<BaseResponseDto> UploadFile(IFormFile file, string uploadDirectory, AbstractValidator<IFormFile> validator)
         {
             var response = new FileDto();
 
             try
             {
                 var fileName = $"{Guid.NewGuid()}.{Path.GetExtension(file.FileName)}";
+
+                var validationResult = validator.Validate(file);
+
+                if(!validationResult.IsValid)
+                    throw new Exception(string.Join("\n", validationResult.Errors.Select(e => e.ErrorMessage)));
 
                 if(!Directory.Exists(uploadDirectory))
                     Directory.CreateDirectory(uploadDirectory);
