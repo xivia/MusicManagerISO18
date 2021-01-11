@@ -21,7 +21,6 @@ namespace MusicManager.Server.Core.Services
 
     public class PasswordResetLinkService : IPasswordResetLinkService
     {
-
         private readonly IPasswordResetLinkRepository _passwordResetLinkRepository;
         private readonly IUserRepository _userRepository;
         private readonly IEmailService _emailService;
