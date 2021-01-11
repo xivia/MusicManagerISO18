@@ -12,6 +12,7 @@
   </ItemGroup>
 
   <ItemGroup>
+    <Folder Include="Core\DataTransferObjects\Song\" />
     <Folder Include="wwwroot\" />
   </ItemGroup>
 

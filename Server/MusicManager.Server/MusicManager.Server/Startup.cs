@@ -48,6 +48,7 @@ namespace MusicManager.Server
             services.AddScoped<IGenreService, GenreService>();
             services.AddScoped<IEmailService, EmailService>();
             services.AddScoped<IPasswordResetLinkService, PasswordResetLinkService>();
+            services.AddScoped<IFileService, FileService>();
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
