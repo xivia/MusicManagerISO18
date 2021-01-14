@@ -16,7 +16,7 @@ namespace MusicManager.Server.Core.Services
 {
     public interface ISongService
     {
-
+        Task<BaseResponseDto> Create(SongRequestDto songRequestDto);
     }
 
     public class SongService : ISongService

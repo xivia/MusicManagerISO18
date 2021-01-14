@@ -1,5 +1,7 @@
 ﻿using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Mvc;
+using MusicManager.Server.Core.DataTransferObjects;
+using MusicManager.Server.Core.DataTransferObjects.SongDtos;
 using MusicManager.Server.Core.Services;
 using System;
 using System.Collections.Generic;
@@ -20,5 +22,10 @@ namespace MusicManager.Server.Controller
             _songService = songService;
         }
 
+        public async Task<ActionResult<BaseResponseDto>> Create(SongRequestDto songRequestDto)
+        {
+            var responseDto = await _songService.Create(songRequestDto);
+            return StatusCode((int)responseDto.StatusCode, responseDto);
+        }
     }
 }
