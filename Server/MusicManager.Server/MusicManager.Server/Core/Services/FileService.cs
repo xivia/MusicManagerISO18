@@ -11,13 +11,13 @@ namespace MusicManager.Server.Core.Services
 {
     public interface IFileService
     {
-        Task<BaseResponseDto> UploadFile(IFormFile file, string uploadDirectory, AbstractValidator<IFormFile> validator);
+        Task<FileDto> UploadFile(IFormFile file, string uploadDirectory, AbstractValidator<IFormFile> validator);
     }
 
     public class FileService : IFileService
     {
 
-        public async Task<BaseResponseDto> UploadFile(IFormFile file, string uploadDirectory, AbstractValidator<IFormFile> validator)
+        public async Task<FileDto> UploadFile(IFormFile file, string uploadDirectory, AbstractValidator<IFormFile> validator)
         {
             var response = new FileDto();
 

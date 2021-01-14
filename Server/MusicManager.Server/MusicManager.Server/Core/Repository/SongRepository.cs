@@ -7,7 +7,7 @@ using System.Threading.Tasks;
 
 namespace MusicManager.Server.Core.Repository
 {
-    public interface ISongRepository
+    public interface ISongRepository : IRepository<Song>
     {
 
     }

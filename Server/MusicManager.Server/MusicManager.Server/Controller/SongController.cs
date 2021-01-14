@@ -1,5 +1,6 @@
-﻿using Microsoft.AspNetCore.Mvc;
-using MusicManager.Server.Core.Repository;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
+using MusicManager.Server.Core.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -9,13 +10,14 @@ namespace MusicManager.Server.Controller
 {
     [Route("api/music/")]
     [ApiController]
+    [Authorize]
     public class SongController : ControllerBase
     {
-        private readonly ISongRepository _songRepository;
+        private readonly ISongService _songService;
 
-        public SongController(ISongRepository songRepository)
+        public SongController(ISongService songService)
         {
-            _songRepository = songRepository;
+            _songService = songService;
         }
 
     }
