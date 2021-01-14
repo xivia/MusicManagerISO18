@@ -5,6 +5,7 @@ using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
+using System.Net;
 using System.Threading.Tasks;
 
 namespace MusicManager.Server.Core.Services
@@ -23,7 +24,7 @@ namespace MusicManager.Server.Core.Services
 
             try
             {
-                var fileName = $"{Guid.NewGuid()}.{Path.GetExtension(file.FileName)}";
+                var fileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
 
                 var validationResult = validator.Validate(file);
 
@@ -46,6 +47,7 @@ namespace MusicManager.Server.Core.Services
             catch (Exception e)
             {
                 response.Infos.Errors.Add(e.Message);
+                response.StatusCode = HttpStatusCode.InternalServerError;
             }
 
             return response;

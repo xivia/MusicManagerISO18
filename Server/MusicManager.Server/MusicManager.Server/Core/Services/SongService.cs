@@ -16,7 +16,7 @@ namespace MusicManager.Server.Core.Services
 {
     public interface ISongService
     {
-        Task<BaseResponseDto> Create(SongRequestDto songRequestDto);
+        Task<BaseResponseDto> Create(IFormFile formFile, SongRequestDto songRequestDto);
     }
 
     public class SongService : ISongService
@@ -38,7 +38,7 @@ namespace MusicManager.Server.Core.Services
             _requestDataService = requestDataService;
         }
 
-        public async Task<BaseResponseDto> Create(SongRequestDto songRequestDto)
+        public async Task<BaseResponseDto> Create(IFormFile file, SongRequestDto songRequestDto)
         {
             var response = new BaseResponseDto();
 
@@ -63,18 +63,20 @@ namespace MusicManager.Server.Core.Services
                     return response;
                 }
 
-                var fileUploadResponse = await _fileService.UploadFile(songRequestDto.FormFile, UPLOAD_DIRECTORY, new SongFileValidator());
+                var fileUploadResponse = await _fileService.UploadFile(file, UPLOAD_DIRECTORY, new SongFileValidator());
 
                 if(fileUploadResponse.HasError)
                 {
                     response.StatusCode = HttpStatusCode.UnprocessableEntity;
-                    response.Infos.Errors.AddRange(response.Infos.Errors);
+                    response.Infos.Errors.AddRange(fileUploadResponse.Infos.Errors);
                     return response;
                 }
 
+                var user = await _requestDataService.GetCurrentUser();
+
                 var dbNewSong = new Song
                 {
-                    Artist = await _requestDataService.GetCurrentUser(),
+                    Artist = user,
                     FilePath = fileUploadResponse.FilePath,
                     Name = songRequestDto.Name,
                     PublishOn = songRequestDto.PublishOn,
@@ -89,6 +91,7 @@ namespace MusicManager.Server.Core.Services
             catch (Exception e)
             {
                 response.Infos.Errors.Add(e.Message);
+                response.StatusCode = HttpStatusCode.InternalServerError;
             }
 
             return response;

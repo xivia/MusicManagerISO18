@@ -159,7 +159,8 @@ namespace MusicManager.Server.Core.Services
 
             var claims = new[]
             {
-              new Claim(JwtRegisteredClaimNames.Sub, user.Name)
+              new Claim("username", user.Name),
+              new Claim("userId", user.UserId.ToString())
             };
 
             var token = new JwtSecurityToken(_config["Jwt:Issuer"],

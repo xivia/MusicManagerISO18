@@ -35,6 +35,8 @@ namespace MusicManager.Server
 
             services.AddDbContext<MusicManagerContext>();
 
+            services.AddHttpContextAccessor();
+
             // Repositories
             services.AddScoped<IUserRepository, UserRepository>();
             services.AddScoped<ISongRepository, SongRepository>();
@@ -49,6 +51,7 @@ namespace MusicManager.Server
             services.AddScoped<IEmailService, EmailService>();
             services.AddScoped<IPasswordResetLinkService, PasswordResetLinkService>();
             services.AddScoped<IFileService, FileService>();
+            services.AddScoped<ISongService, SongService>();
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>
