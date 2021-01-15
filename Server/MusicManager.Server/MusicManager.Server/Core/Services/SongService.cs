@@ -156,8 +156,12 @@ namespace MusicManager.Server.Core.Services
                     return response;
                 }
 
-                if(!await _songRepository.Delete(dbSong))
-                    throw new Exception("Failed to delete the song");
+                dbSong.Deleted = true;
+
+                await _songRepository.Update(dbSong);
+
+                if(!_fileService.DeleteFile(dbSong.FilePath))
+                    throw new Exception("Failed to delete the song file");
             }
             catch (Exception e)
             {

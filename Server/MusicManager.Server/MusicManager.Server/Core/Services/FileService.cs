@@ -13,6 +13,7 @@ namespace MusicManager.Server.Core.Services
     public interface IFileService
     {
         Task<FileDto> UploadFile(IFormFile file, string uploadDirectory, AbstractValidator<IFormFile> validator);
+        bool DeleteFile(string filePath);
     }
 
     public class FileService : IFileService
@@ -51,6 +52,19 @@ namespace MusicManager.Server.Core.Services
             }
 
             return response;
+        }
+
+        public bool DeleteFile(string filePath)
+        {
+            var isDeleted = false;
+
+            if(File.Exists(filePath))
+            {
+                File.Delete(filePath);
+                isDeleted = true;
+            }
+
+            return isDeleted;
         }
 
     }
