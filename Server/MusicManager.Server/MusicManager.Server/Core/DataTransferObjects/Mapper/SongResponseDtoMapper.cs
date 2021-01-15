@@ -21,5 +21,10 @@ namespace MusicManager.Server.Core.DataTransferObjects.Mapper
             };
         }
 
+        public static List<SongResponseDto> DbToDto(List<Song> songs)
+        {
+            return songs.Select(song => DbToDto(song)).ToList();
+        }
+
     }
 }
