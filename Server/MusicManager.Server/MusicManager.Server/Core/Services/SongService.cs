@@ -17,6 +17,7 @@ namespace MusicManager.Server.Core.Services
     public interface ISongService
     {
         Task<BaseResponseDto> Create(IFormFile formFile, SongRequestDto songRequestDto);
+        Task<FileDto> GetFilePathBySongId(long songId);
     }
 
     public class SongService : ISongService
@@ -87,6 +88,39 @@ namespace MusicManager.Server.Core.Services
                 var newSong = await _songRepository.Insert(dbNewSong);
 
                 response.Data.Add("song", SongResponseDtoMapper.DbToDto(newSong));
+            }
+            catch (Exception e)
+            {
+                response.Infos.Errors.Add(e.Message);
+                response.StatusCode = HttpStatusCode.InternalServerError;
+            }
+
+            return response;
+        }
+
+        public async Task<FileDto> GetFilePathBySongId(long songId)
+        {
+            var response = new FileDto();
+
+            try
+            {
+                var dbSong = await _songRepository.GetById(songId);
+
+                if(dbSong is null)
+                {
+                    response.Infos.Errors.Add($"Song with id {songId} has not been found");
+                    response.StatusCode = HttpStatusCode.NotFound;
+                    return response;
+                }
+
+                if(dbSong.PublishOn < DateTime.Now)
+                {
+                    response.Infos.Errors.Add("Song is not available yet");
+                    response.StatusCode = HttpStatusCode.Conflict;
+                    return response;
+                }
+
+                response.FilePath = dbSong.FilePath;
             }
             catch (Exception e)
             {

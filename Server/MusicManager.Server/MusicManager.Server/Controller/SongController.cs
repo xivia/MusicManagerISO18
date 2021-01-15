@@ -45,5 +45,17 @@ namespace MusicManager.Server.Controller
 
             return StatusCode((int)responseDto.StatusCode, responseDto);
         }
+
+        [HttpGet("{songId}")]
+        public async Task<IActionResult> GetById(long songId)
+        {
+            var response = await _songService.GetFilePathBySongId(songId);
+
+            var fileResponse = File(System.IO.File.OpenRead(response.FilePath), "audio/mpeg");
+            fileResponse.EnableRangeProcessing = true;
+
+            return fileResponse;
+        }
+
     }
 }
