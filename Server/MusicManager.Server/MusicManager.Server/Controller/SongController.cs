@@ -57,5 +57,12 @@ namespace MusicManager.Server.Controller
             return fileResponse;
         }
 
+        [HttpPut("{songId}")]
+        public async Task<ActionResult<BaseResponseDto>> DeleteById(long songId)
+        {
+            var responseDto = await _songService.DeleteById(songId);
+            return StatusCode((int)responseDto.StatusCode, responseDto);
+        }
+
     }
 }

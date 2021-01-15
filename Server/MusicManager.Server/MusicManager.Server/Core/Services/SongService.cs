@@ -18,6 +18,7 @@ namespace MusicManager.Server.Core.Services
     {
         Task<BaseResponseDto> Create(IFormFile formFile, SongRequestDto songRequestDto);
         Task<FileDto> GetFilePathBySongId(long songId);
+        Task<BaseResponseDto> DeleteById(long songId);
     }
 
     public class SongService : ISongService
@@ -121,6 +122,42 @@ namespace MusicManager.Server.Core.Services
                 }
 
                 response.FilePath = dbSong.FilePath;
+            }
+            catch (Exception e)
+            {
+                response.Infos.Errors.Add(e.Message);
+                response.StatusCode = HttpStatusCode.InternalServerError;
+            }
+
+            return response;
+        }
+
+        public async Task<BaseResponseDto> DeleteById(long songId)
+        {
+            var response = new BaseResponseDto();
+
+            try
+            {
+                var dbSong = await _songRepository.GetById(songId);
+
+                if (dbSong is null)
+                {
+                    response.Infos.Errors.Add($"Song with id {songId} has not been found");
+                    response.StatusCode = HttpStatusCode.NotFound;
+                    return response;
+                }
+
+                var currentUser = await _requestDataService.GetCurrentUser();
+
+                if(dbSong.Artist.UserId != currentUser.UserId)
+                {
+                    response.Infos.Errors.Add($"Song with id {songId} cannot be deleted because it isn't linked to your account");
+                    response.StatusCode = HttpStatusCode.Unauthorized;
+                    return response;
+                }
+
+                if(!await _songRepository.Delete(dbSong))
+                    throw new Exception("Failed to delete the song");
             }
             catch (Exception e)
             {
