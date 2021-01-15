@@ -5,6 +5,7 @@ namespace MusicManager.Server.Core.Model
 {
     public class SongToPlaylist
     {
+        // TODO: Remove this class and add List<Song> songs to Playlist
         [Key]
         public long SongToPlaylistId { get; set; }
         [ForeignKey("PlaylistId")]
