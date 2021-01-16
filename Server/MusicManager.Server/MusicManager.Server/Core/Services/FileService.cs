@@ -60,8 +60,12 @@ namespace MusicManager.Server.Core.Services
 
             if(File.Exists(filePath))
             {
-                File.Delete(filePath);
-                isDeleted = true;
+                try
+                {
+                    File.Delete(filePath);
+                    isDeleted = true;
+                }
+                catch (Exception) { } // Who cares about exceptions??
             }
 
             return isDeleted;

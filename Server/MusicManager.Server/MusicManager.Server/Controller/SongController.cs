@@ -15,7 +15,6 @@ namespace MusicManager.Server.Controller
 {
     [Route("api/song/")]
     [ApiController]
-    [Authorize]
     public class SongController : ControllerBase
     {
         private readonly ISongService _songService;
@@ -28,6 +27,7 @@ namespace MusicManager.Server.Controller
         [HttpPost]
         [Produces("application/json")]
         [Consumes("multipart/form-data")]
+        [Authorize]
         public async Task<ActionResult<BaseResponseDto>> Create([FromForm(Name = "file")] IFormFile file, [FromForm] string songRequestDto)
         {
             BaseResponseDto responseDto = new BaseResponseDto();
@@ -51,13 +51,19 @@ namespace MusicManager.Server.Controller
         {
             var response = await _songService.GetFilePathBySongId(songId);
 
+            if(response.HasError)
+            {
+                return StatusCode((int) response.StatusCode);
+            }
+
             var fileResponse = File(System.IO.File.OpenRead(response.FilePath), "audio/mpeg");
             fileResponse.EnableRangeProcessing = true;
 
             return fileResponse;
         }
 
-        [HttpPut("{songId}")]
+        [HttpDelete("{songId}")]
+        [Authorize]
         public async Task<ActionResult<BaseResponseDto>> DeleteById(long songId)
         {
             var responseDto = await _songService.DeleteById(songId);

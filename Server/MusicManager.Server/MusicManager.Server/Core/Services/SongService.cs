@@ -107,14 +107,14 @@ namespace MusicManager.Server.Core.Services
             {
                 var dbSong = await _songRepository.GetById(songId);
 
-                if(dbSong is null)
+                if(dbSong is null || dbSong.Deleted)
                 {
                     response.Infos.Errors.Add($"Song with id {songId} has not been found");
                     response.StatusCode = HttpStatusCode.NotFound;
                     return response;
                 }
 
-                if(dbSong.PublishOn < DateTime.Now)
+                if(dbSong.PublishOn > DateTime.Now)
                 {
                     response.Infos.Errors.Add("Song is not available yet");
                     response.StatusCode = HttpStatusCode.Conflict;
@@ -138,6 +138,7 @@ namespace MusicManager.Server.Core.Services
 
             try
             {
+                // TODO: Delete song from playlist when any playlist contains this song
                 var dbSong = await _songRepository.GetById(songId);
 
                 if (dbSong is null)
