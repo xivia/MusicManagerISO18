@@ -14,7 +14,6 @@ namespace MusicManager.Server.Core.Validators
 
         public SongFileValidator()
         {
-            // TODO: Validate file header signature
             RuleFor(x => x).Custom((file, context) => 
             {
                 var result = FileTypeVerifier.What(file.OpenReadStream());

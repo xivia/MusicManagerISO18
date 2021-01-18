@@ -12,7 +12,6 @@ namespace MusicManger.Server.Core.Infrastructure
         public virtual DbSet<User> Users { get; set; }
         public virtual DbSet<Genre> Genres { get; set; }
         public virtual DbSet<Playlist> Playlists { get; set; }
-        public virtual DbSet<SongToPlaylist> SongToPlaylists { get; set; }
         public virtual DbSet<Song> Songs { get; set; }
         public virtual DbSet<PasswordResetLink> PasswordResetLinks { get; set; }
 

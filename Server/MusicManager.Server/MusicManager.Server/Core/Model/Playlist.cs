@@ -1,3 +1,4 @@
+using System.Collections.Generic;
 using System.ComponentModel.DataAnnotations;
 using System.ComponentModel.DataAnnotations.Schema;
 
@@ -10,5 +11,6 @@ namespace MusicManager.Server.Core.Model
         [ForeignKey("UserId")]
         public User user { get; set; }
         public string Name { get; set; }
+        public virtual List<Song> Songs { get; set; }
     }
 }
