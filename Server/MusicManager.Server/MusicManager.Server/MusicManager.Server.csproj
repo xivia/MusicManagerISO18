@@ -9,6 +9,8 @@
     <Compile Remove="Migrations\20201026210304_Initial.Designer.cs" />
     <Compile Remove="Migrations\20201130171330_PasswordResetLink.cs" />
     <Compile Remove="Migrations\20201130171330_PasswordResetLink.Designer.cs" />
+    <Compile Remove="Migrations\20210118133533_UpdatedUserPropertyInPlaylist.cs" />
+    <Compile Remove="Migrations\20210118133533_UpdatedUserPropertyInPlaylist.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
