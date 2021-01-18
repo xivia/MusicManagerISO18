@@ -25,6 +25,9 @@ namespace MusicManager.Server.Core.Services
 
             try
             {
+                if(file is null)
+                    throw new Exception("No file attached to request");
+
                 var fileName = $"{Guid.NewGuid()}{Path.GetExtension(file.FileName)}";
 
                 var validationResult = validator.Validate(file);
