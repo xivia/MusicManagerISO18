@@ -18,6 +18,7 @@ namespace MusicManager.Server.Core.DataTransferObjects.Mapper
 
             return new SongResponseDto
             {
+                SongId = song.SongId,
                 Genre = song.SongGenre,
                 Name = song.Name,
                 Artist = UserResponseDtoMapper.FromDb(song.Artist),

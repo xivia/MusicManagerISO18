@@ -19,7 +19,7 @@ namespace MusicManager.Server.Core.Validators
                 var result = FileTypeVerifier.What(file.OpenReadStream());
                 
                 if(!result.IsVerified)
-                    context.AddFailure("The file has an invalid file type");
+                    context.AddFailure("The song file has an invalid file type, allowed are mp3 and wav");
             });
 
             // length / 1048576 gives size in mb
