@@ -11,5 +11,6 @@ namespace MusicManager.Server.Core.DataTransferObjects.SongDtos
         public DateTime PublishOn { get; set; } = DateTime.Now;
         public UserResponseDto Artist { get; set; }
         public string CoverFileBase64 { get; set; }
+        public string Duration { get; set; }
     }
 }

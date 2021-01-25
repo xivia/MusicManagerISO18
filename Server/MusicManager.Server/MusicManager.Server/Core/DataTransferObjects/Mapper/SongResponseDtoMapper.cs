@@ -16,6 +16,9 @@ namespace MusicManager.Server.Core.DataTransferObjects.Mapper
             Byte[] coverFileBytes = File.ReadAllBytes(song.CoverFilePath);
             string coverFileBase64 = Convert.ToBase64String(coverFileBytes);
 
+            var tFile = TagLib.File.Create(song.FilePath, TagLib.ReadStyle.Average);
+            TimeSpan duration = tFile.Properties.Duration;
+
             return new SongResponseDto
             {
                 SongId = song.SongId,
@@ -23,7 +26,8 @@ namespace MusicManager.Server.Core.DataTransferObjects.Mapper
                 Name = song.Name,
                 Artist = UserResponseDtoMapper.FromDb(song.Artist),
                 PublishOn = song.PublishOn,
-                CoverFileBase64 = coverFileBase64
+                CoverFileBase64 = coverFileBase64,
+                Duration = duration.TotalMinutes.ToString("00:00")
             };
         }
 
