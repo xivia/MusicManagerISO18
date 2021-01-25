@@ -1,5 +1,6 @@
 ﻿using MusicManager.Server.Core.Model;
 using System.Collections.Generic;
+using System.Linq;
 
 namespace MusicManager.Server.Core.DataTransferObjects.Mapper
 {
@@ -8,20 +9,7 @@ namespace MusicManager.Server.Core.DataTransferObjects.Mapper
 
         public static List<UserResponseDto> FromDb(List<User> dbUsers)
         {
-            List<UserResponseDto> userResponseDtos = new List<UserResponseDto>();
-
-            dbUsers.ForEach(user =>
-            {
-                userResponseDtos.Add(new UserResponseDto
-                {
-                    UserId = user.UserId,
-                    Name = user.Name,
-                    EmailAddress = user.EmailAddress,
-                    Banned = user.Banned
-                });
-            });
-
-            return userResponseDtos;
+            return dbUsers.Select(FromDb).ToList();
         }
 
         public static UserResponseDto FromDb(User dbUser)
@@ -33,7 +21,6 @@ namespace MusicManager.Server.Core.DataTransferObjects.Mapper
             {
                 UserId = dbUser.UserId,
                 Name = dbUser.Name,
-                EmailAddress = dbUser.EmailAddress,
                 Banned = dbUser.Banned
             };
         }

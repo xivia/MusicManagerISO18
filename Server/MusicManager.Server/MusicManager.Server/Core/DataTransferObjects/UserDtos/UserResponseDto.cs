@@ -9,7 +9,6 @@ namespace MusicManager.Server.Core.DataTransferObjects
     {
         public long UserId { get; set; }
         public string Name { get; set; }
-        public string EmailAddress { get; set; }
         public bool Banned { get; set; }
     }
 }
