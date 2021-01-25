@@ -43,6 +43,7 @@ namespace MusicManager.Server
             services.AddScoped<IPlaylistRepository, PlaylistRepository>();
             services.AddScoped<IGenreRepository, GenreRepository>();
             services.AddScoped<IPasswordResetLinkRepository, PasswordResetLinkRepository>();
+            services.AddScoped<ISongLyricsRepository, SongLyricsRepository>();
 
             // Services
             services.AddScoped<IRequestDataService, RequestDataService>();
@@ -52,6 +53,7 @@ namespace MusicManager.Server
             services.AddScoped<IPasswordResetLinkService, PasswordResetLinkService>();
             services.AddScoped<IFileService, FileService>();
             services.AddScoped<ISongService, SongService>();
+            services.AddScoped<ISongLyricsService, SongLyricsService>();
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>

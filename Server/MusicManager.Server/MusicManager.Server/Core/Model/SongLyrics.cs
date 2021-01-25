@@ -13,6 +13,7 @@ namespace MusicManager.Server.Core.Model
         public long SongLyricsId { get; set; }
 
         [ForeignKey("SongId")]
+        public long SongId { get; set; }
         public Song Song { get; set; }
 
         [MaxLength]

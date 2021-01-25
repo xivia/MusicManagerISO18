@@ -8,9 +8,14 @@ namespace MusicManager.Server.Core.Model
     {
         [Key]
         public long PlaylistId { get; set; }
+        
         [ForeignKey("UserId")]
+        public long UserId { get; set; }
+        
         public User User { get; set; }
+        
         public string Name { get; set; }
+        
         public virtual List<Song> Songs { get; set; }
     }
 }

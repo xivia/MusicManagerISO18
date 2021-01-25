@@ -10,9 +10,11 @@ namespace MusicManager.Server.Core.Model
         public long SongId { get; set; }
 
         [ForeignKey("GenreId")]
+        public long GenreId { get; set; }
         public Genre SongGenre { get; set; }
 
         [ForeignKey("UserId")]
+        public long UserId { get; set; }
         public User Artist { get; set; }
 
         public string Name { get; set; }
