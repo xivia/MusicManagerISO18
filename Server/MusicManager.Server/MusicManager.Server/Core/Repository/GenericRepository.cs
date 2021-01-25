@@ -41,7 +41,7 @@ namespace MusicManager.Server.Core.Repository
                             .ToListAsync();
         }
 
-        public async Task<T> GetById(long id)
+        public virtual async Task<T> GetById(long id)
         {
             return await _entities
                             .Where(entity => (long) entity
