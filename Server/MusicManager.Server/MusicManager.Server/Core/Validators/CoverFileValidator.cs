@@ -14,6 +14,8 @@ namespace MusicManager.Server.Core.Validators
 
         public CoverFileValidator()
         {
+            // TODO: File header signature validation
+
             // length / 1048576 gives size in mb
             RuleFor(x => x.Length / 1048576).NotNull().LessThanOrEqualTo(MAX_FILE_SIZE_MB)
                 .WithMessage($"File size is larger than max allowed size {MAX_FILE_SIZE_MB}");
