@@ -2,6 +2,7 @@
 using MusicManager.Server.Core.Model;
 using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -12,12 +13,16 @@ namespace MusicManager.Server.Core.DataTransferObjects.Mapper
 
         public static SongResponseDto DbToDto(Song song)
         {
+            Byte[] coverFileBytes = File.ReadAllBytes(song.CoverFilePath);
+            string coverFileBase64 = Convert.ToBase64String(coverFileBytes);
+
             return new SongResponseDto
             {
                 Genre = song.SongGenre,
                 Name = song.Name,
                 Artist = UserResponseDtoMapper.FromDb(song.Artist),
-                PublishOn = song.PublishOn
+                PublishOn = song.PublishOn,
+                CoverFileBase64 = coverFileBase64
             };
         }
 

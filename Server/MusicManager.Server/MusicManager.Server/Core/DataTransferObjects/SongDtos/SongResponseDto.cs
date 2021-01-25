@@ -1,9 +1,5 @@
-﻿using MusicManager.Server.Core.DataTransferObjects.UserDtos;
-using MusicManager.Server.Core.Model;
+﻿using MusicManager.Server.Core.Model;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace MusicManager.Server.Core.DataTransferObjects.SongDtos
 {
@@ -13,5 +9,6 @@ namespace MusicManager.Server.Core.DataTransferObjects.SongDtos
         public string Name { get; set; }
         public DateTime PublishOn { get; set; } = DateTime.Now;
         public UserResponseDto Artist { get; set; }
+        public string CoverFileBase64 { get; set; }
     }
 }

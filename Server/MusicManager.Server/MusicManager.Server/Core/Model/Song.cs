@@ -16,5 +16,6 @@ namespace MusicManager.Server.Core.Model
         public string FilePath { get; set; }
         public bool Deleted { get; set; }
         public DateTime PublishOn { get; set; }
+        public string CoverFilePath { get; set; }
     }
 }

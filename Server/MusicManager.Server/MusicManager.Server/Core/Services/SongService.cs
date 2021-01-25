@@ -16,8 +16,9 @@ namespace MusicManager.Server.Core.Services
 {
     public interface ISongService
     {
-        Task<BaseResponseDto> Create(IFormFile formFile, SongRequestDto songRequestDto);
+        Task<BaseResponseDto> Create(IFormFile formFile, IFormFile songCoverFile, SongRequestDto songRequestDto);
         Task<FileDto> GetFilePathBySongId(long songId);
+        Task<BaseResponseDto> GetById(long songId);
         Task<BaseResponseDto> DeleteById(long songId);
     }
 
@@ -27,7 +28,7 @@ namespace MusicManager.Server.Core.Services
         private readonly IGenreRepository _genreRepository;
         private readonly IFileService _fileService;
         private readonly IRequestDataService _requestDataService;
-        private readonly string UPLOAD_DIRECTORY = $"{Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName}\\Public\\Music";
+        private readonly string UPLOAD_DIRECTORY = $"{Directory.GetParent(Environment.CurrentDirectory).Parent.Parent.FullName}\\Public";
 
         public SongService(IFileService fileService, 
             ISongRepository songRepository, 
@@ -40,7 +41,7 @@ namespace MusicManager.Server.Core.Services
             _requestDataService = requestDataService;
         }
 
-        public async Task<BaseResponseDto> Create(IFormFile file, SongRequestDto songRequestDto)
+        public async Task<BaseResponseDto> Create(IFormFile file, IFormFile songCoverFile, SongRequestDto songRequestDto)
         {
             var response = new BaseResponseDto();
 
@@ -65,12 +66,21 @@ namespace MusicManager.Server.Core.Services
                     return response;
                 }
 
-                var fileUploadResponse = await _fileService.UploadFile(file, UPLOAD_DIRECTORY, new SongFileValidator());
+                var fileUploadResponse = await _fileService.UploadFile(file, $"{UPLOAD_DIRECTORY}\\Music", new SongFileValidator());
 
                 if(fileUploadResponse.HasError)
                 {
                     response.StatusCode = HttpStatusCode.UnprocessableEntity;
                     response.Infos.Errors.AddRange(fileUploadResponse.Infos.Errors);
+                    return response;
+                }
+
+                var songCoverUploadResponse = await _fileService.UploadFile(songCoverFile, $"{UPLOAD_DIRECTORY}\\Covers", new CoverFileValidator());
+
+                if(songCoverUploadResponse.HasError)
+                {
+                    response.StatusCode = HttpStatusCode.UnprocessableEntity;
+                    response.Infos.Errors.AddRange(songCoverUploadResponse.Infos.Errors);
                     return response;
                 }
 
@@ -83,7 +93,8 @@ namespace MusicManager.Server.Core.Services
                     Name = songRequestDto.Name,
                     PublishOn = songRequestDto.PublishOn,
                     Deleted = false,
-                    SongGenre = dbGenre
+                    SongGenre = dbGenre,
+                    CoverFilePath = songCoverUploadResponse.FilePath
                 };
 
                 var newSong = await _songRepository.Insert(dbNewSong);
@@ -122,6 +133,32 @@ namespace MusicManager.Server.Core.Services
                 }
 
                 response.FilePath = dbSong.FilePath;
+            }
+            catch (Exception e)
+            {
+                response.Infos.Errors.Add(e.Message);
+                response.StatusCode = HttpStatusCode.InternalServerError;
+            }
+
+            return response;
+        }
+
+        public async Task<BaseResponseDto> GetById(long songId)
+        {
+            var response = new BaseResponseDto();
+
+            try
+            {
+                var dbSong = await _songRepository.GetById(songId);
+
+                if (dbSong is null)
+                {
+                    response.Infos.Errors.Add($"Song with id {songId} has not been found");
+                    response.StatusCode = HttpStatusCode.NotFound;
+                    return response;
+                }
+
+                response.Data.Add("song", SongResponseDtoMapper.DbToDto(dbSong));
             }
             catch (Exception e)
             {
