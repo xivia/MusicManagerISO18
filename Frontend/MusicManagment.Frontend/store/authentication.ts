@@ -59,11 +59,10 @@ export const actions: ActionTree<RootState, RootState> = {
                 if (isAuthenticated) {
                   const token = this.getters['authentication/token'] as ReturnType<typeof getters.token>;
                   config.headers['Authorization'] = `Bearer ${token}`;
-                  console.log(token);
                 }
                 return config;
               });
-            
+
             this.$router.push(`/${this.$i18n.locale}`);
         } else {
             console.error(response);

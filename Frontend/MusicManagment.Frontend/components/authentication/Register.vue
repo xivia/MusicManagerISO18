@@ -16,7 +16,7 @@
             <div class="control">
                 <input class="input" v-bind:class="{ 'is-danger': $v.email.$invalid }" type="text" v-model="email" :placeholder="$t('register.form.email.name')">
             </div>
-            <p class="help is-danger" v-if="!$v.email.required">{{ $t('register.form.email.validation.required') }}</p>
+            <!--<p class="help is-danger" v-if="!$v.email.required">{{ $t('register.form.email.validation.required') }}</p>-->
             <p class="help is-danger" v-if="!$v.email.minLength">{{ $t('register.form.email.validation.minLength') }}</p>
             <p class="help is-danger" v-if="!$v.email.email">{{ $t('register.form.email.validation.email') }}</p>
         </div>
@@ -50,6 +50,7 @@ export default Vue.extend({
   data() {
     return {
       userName: '',
+      email: '',
       password: '',
     }
   },
@@ -61,7 +62,7 @@ export default Vue.extend({
       minLength: minLength(4),
     },
     email: {
-      required,
+      //required,
       email,
       minLength: minLength(4),
     },
@@ -71,7 +72,7 @@ export default Vue.extend({
       maxLength: maxLength(18)
     },
   },
-  
+
   methods: {
     submit(): void {
       if (!this.$v.$invalid) {

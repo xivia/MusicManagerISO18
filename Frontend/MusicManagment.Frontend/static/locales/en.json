@@ -3,7 +3,8 @@
     "navigation": {
         "login": "Login",
         "logout": "Logout",
-        "register": "Register"
+        "register": "Register",
+        "genre": "genre"
     },
     "register": {
         "title": "Register",

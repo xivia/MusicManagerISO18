@@ -3,7 +3,8 @@
     "navigation": {
         "login": "Login",
         "logout": "Logout",
-        "register": "Registrieren"
+        "register": "Registrieren",
+        "genre": "Musikrichtung"
     },
     "register": {
         "title": "Registrieren",

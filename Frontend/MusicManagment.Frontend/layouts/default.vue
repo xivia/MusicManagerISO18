@@ -21,6 +21,9 @@
 
       <div id="navbarBasicExample" class="navbar-menu">
         <div class="navbar-start">
+          <NuxtLink class="navbar-item" :to="localePath('genre')">{{
+          $t('navigation.genre')
+          }}</NuxtLink>
           <a class="navbar-item"> Home </a>
           <a class="navbar-item"> Documentation </a>
         </div>
@@ -34,20 +37,16 @@
                   :to="localePath('register')"
                   >{{ $t('navigation.register') }}</NuxtLink
                 >
-                <NuxtLink
-                  class="button is-primary"
-                  :to="localePath('login')"
-                  >{{ $t('navigation.login') }}</NuxtLink
-                >
+                <NuxtLink class="button is-primary" :to="localePath('login')">{{
+                  $t('navigation.login')
+                }}</NuxtLink>
               </div>
             </div>
             <div v-if="isAuthenticated">
               <div class="buttons">
-                <button
-                  class="button is-primary"
-                  @click="logout()"
-                  >{{ $t('navigation.logout') }}</button
-                >
+                <button class="button is-primary" @click="logout()">
+                  {{ $t('navigation.logout') }}
+                </button>
               </div>
             </div>
           </div>
@@ -60,8 +59,8 @@
   </div>
 </template>
 
-<script lang='ts'>
-import Vue from 'vue';
+<script lang="ts">
+import Vue from 'vue'
 import { getters } from '~/store/authentication'
 
 export default Vue.extend({
@@ -69,19 +68,21 @@ export default Vue.extend({
 
   data() {
     return {
-      isAuthenticated: false
+      isAuthenticated: false,
     }
   },
 
   beforeUpdate() {
-    this.isAuthenticated = this.$store.getters['authentication/isAuthenticated'] as ReturnType<typeof getters.isAuthenticated>
+    this.isAuthenticated = this.$store.getters[
+      'authentication/isAuthenticated'
+    ] as ReturnType<typeof getters.isAuthenticated>
   },
 
   methods: {
     logout(): void {
-      this.$store.dispatch('authentication/logout');
-    }
-  }
+      this.$store.dispatch('authentication/logout')
+    },
+  },
 })
 </script>
 
