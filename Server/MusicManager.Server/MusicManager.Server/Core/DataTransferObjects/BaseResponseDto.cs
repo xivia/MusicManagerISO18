@@ -21,6 +21,26 @@ namespace MusicManager.Server.Core.DataTransferObjects
             StatusCode = HttpStatusCode.OK;
         }
 
+        public void AddError(string error)
+        {
+            Infos.Errors.Add(error);
+        }
+
+        public void AddErrors(List<string> errors)
+        {
+            Infos.Errors.AddRange(errors);
+        }
+
+        public void AddInfo(string info)
+        {
+            Infos.Infos.Add(info);
+        }
+
+        public void AddMessage(string message)
+        {
+            Infos.Messages.Add(message);
+        }
+
     }
 
     public class ResponseInfos

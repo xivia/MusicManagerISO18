@@ -3,15 +3,17 @@ using System;
 using Microsoft.EntityFrameworkCore;
 using Microsoft.EntityFrameworkCore.Infrastructure;
 using Microsoft.EntityFrameworkCore.Metadata;
+using Microsoft.EntityFrameworkCore.Migrations;
 using Microsoft.EntityFrameworkCore.Storage.ValueConversion;
 using MusicManger.Server.Core.Infrastructure;
 
 namespace MusicManager.Server.Migrations
 {
     [DbContext(typeof(MusicManagerContext))]
-    partial class MusicManagerContextModelSnapshot : ModelSnapshot
+    [Migration("20210125133817_AddedCoverFilePath")]
+    partial class AddedCoverFilePath
     {
-        protected override void BuildModel(ModelBuilder modelBuilder)
+        protected override void BuildTargetModel(ModelBuilder modelBuilder)
         {
 #pragma warning disable 612, 618
             modelBuilder
@@ -57,7 +59,7 @@ namespace MusicManager.Server.Migrations
 
                     b.Property<string>("Name");
 
-                    b.Property<long>("UserId");
+                    b.Property<long?>("UserId");
 
                     b.HasKey("PlaylistId");
 
@@ -78,7 +80,7 @@ namespace MusicManager.Server.Migrations
 
                     b.Property<string>("FilePath");
 
-                    b.Property<long>("GenreId");
+                    b.Property<long?>("GenreId");
 
                     b.Property<string>("Name");
 
@@ -86,7 +88,7 @@ namespace MusicManager.Server.Migrations
 
                     b.Property<DateTime>("PublishOn");
 
-                    b.Property<long>("UserId");
+                    b.Property<long?>("UserId");
 
                     b.HasKey("SongId");
 
@@ -97,23 +99,6 @@ namespace MusicManager.Server.Migrations
                     b.HasIndex("UserId");
 
                     b.ToTable("Songs");
-                });
-
-            modelBuilder.Entity("MusicManager.Server.Core.Model.SongLyrics", b =>
-                {
-                    b.Property<long>("SongLyricsId")
-                        .ValueGeneratedOnAdd()
-                        .HasAnnotation("SqlServer:ValueGenerationStrategy", SqlServerValueGenerationStrategy.IdentityColumn);
-
-                    b.Property<string>("Lyrics");
-
-                    b.Property<long>("SongId");
-
-                    b.HasKey("SongLyricsId");
-
-                    b.HasIndex("SongId");
-
-                    b.ToTable("SongLyrics");
                 });
 
             modelBuilder.Entity("MusicManager.Server.Core.Model.User", b =>
@@ -148,16 +133,14 @@ namespace MusicManager.Server.Migrations
                 {
                     b.HasOne("MusicManager.Server.Core.Model.User", "User")
                         .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("UserId");
                 });
 
             modelBuilder.Entity("MusicManager.Server.Core.Model.Song", b =>
                 {
                     b.HasOne("MusicManager.Server.Core.Model.Genre", "SongGenre")
                         .WithMany()
-                        .HasForeignKey("GenreId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("GenreId");
 
                     b.HasOne("MusicManager.Server.Core.Model.Playlist")
                         .WithMany("Songs")
@@ -165,16 +148,7 @@ namespace MusicManager.Server.Migrations
 
                     b.HasOne("MusicManager.Server.Core.Model.User", "Artist")
                         .WithMany()
-                        .HasForeignKey("UserId")
-                        .OnDelete(DeleteBehavior.Cascade);
-                });
-
-            modelBuilder.Entity("MusicManager.Server.Core.Model.SongLyrics", b =>
-                {
-                    b.HasOne("MusicManager.Server.Core.Model.Song", "Song")
-                        .WithMany()
-                        .HasForeignKey("SongId")
-                        .OnDelete(DeleteBehavior.Cascade);
+                        .HasForeignKey("UserId");
                 });
 #pragma warning restore 612, 618
         }

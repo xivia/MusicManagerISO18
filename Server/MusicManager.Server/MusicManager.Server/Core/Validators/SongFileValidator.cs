@@ -14,13 +14,12 @@ namespace MusicManager.Server.Core.Validators
 
         public SongFileValidator()
         {
-            // TODO: Validate file header signature
             RuleFor(x => x).Custom((file, context) => 
             {
                 var result = FileTypeVerifier.What(file.OpenReadStream());
                 
                 if(!result.IsVerified)
-                    context.AddFailure("The file has an invalid file type");
+                    context.AddFailure("The song file has an invalid file type, allowed are mp3 and wav");
             });
 
             // length / 1048576 gives size in mb

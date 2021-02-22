@@ -28,14 +28,14 @@ namespace MusicManager.Server.Controller
         [Produces("application/json")]
         [Consumes("multipart/form-data")]
         [Authorize]
-        public async Task<ActionResult<BaseResponseDto>> Create([FromForm(Name = "file")] IFormFile file, [FromForm] string songRequestDto)
+        public async Task<ActionResult<BaseResponseDto>> Create([FromForm(Name = "file")] IFormFile file, [FromForm(Name = "coverFile")] IFormFile coverFile, [FromForm] string songRequestDto)
         {
             BaseResponseDto responseDto = new BaseResponseDto();
 
             try
             {
                 var requestDto = JsonConvert.DeserializeObject<SongRequestDto>(songRequestDto);
-                responseDto = await _songService.Create(file, requestDto);
+                responseDto = await _songService.Create(file, coverFile, requestDto);
             }
             catch (Exception e)
             {
@@ -46,8 +46,8 @@ namespace MusicManager.Server.Controller
             return StatusCode((int)responseDto.StatusCode, responseDto);
         }
 
-        [HttpGet("{songId}")]
-        public async Task<IActionResult> GetById(long songId)
+        [HttpGet("{songId}/stream")]
+        public async Task<IActionResult> GetStreamById(long songId)
         {
             var response = await _songService.GetFilePathBySongId(songId);
 
@@ -60,6 +60,13 @@ namespace MusicManager.Server.Controller
             fileResponse.EnableRangeProcessing = true;
 
             return fileResponse;
+        }
+
+        [HttpGet("{songId}")]
+        public async Task<IActionResult> GetById(long songId)
+        {
+            var responseDto = await _songService.GetById(songId);
+            return StatusCode((int)responseDto.StatusCode, responseDto);
         }
 
         [HttpDelete("{songId}")]

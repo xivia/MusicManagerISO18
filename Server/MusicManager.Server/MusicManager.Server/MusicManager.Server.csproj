@@ -9,6 +9,8 @@
     <Compile Remove="Migrations\20201026210304_Initial.Designer.cs" />
     <Compile Remove="Migrations\20201130171330_PasswordResetLink.cs" />
     <Compile Remove="Migrations\20201130171330_PasswordResetLink.Designer.cs" />
+    <Compile Remove="Migrations\20210118133533_UpdatedUserPropertyInPlaylist.cs" />
+    <Compile Remove="Migrations\20210118133533_UpdatedUserPropertyInPlaylist.Designer.cs" />
   </ItemGroup>
 
   <ItemGroup>
@@ -21,6 +23,7 @@
     <PackageReference Include="FluentValidation.AspNetCore" Version="9.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.1.2" PrivateAssets="All" />
+    <PackageReference Include="TagLibSharp" Version="2.2.0" />
   </ItemGroup>
 
 </Project>
