@@ -77,5 +77,11 @@ namespace MusicManager.Server.Controller
             return StatusCode((int)responseDto.StatusCode, responseDto);
         }
 
+        [HttpGet("{search}")]
+        public async Task<ActionResult<BaseResponseDto>> Search(string search)
+        {
+
+        }
+
     }
 }

@@ -210,5 +210,30 @@ namespace MusicManager.Server.Core.Services
             return response;
         }
 
+        public async Task<BaseResponseDto> SearchSong(string search)
+        {
+            var response = new BaseResponseDto();
+
+            try
+            {
+                var dbSongs = await _songRepository.SearchSongByTitle(search);
+
+                if(dbSongs.Count < 1)
+                {
+                    response.AddError($"No songs found with search {search}");
+                    response.StatusCode = HttpStatusCode.NotFound;
+                }
+
+                response.Data.Add("songs", SongResponseDtoMapper.DbToDto(dbSongs));
+            }
+            catch (Exception e)
+            {
+                response.Infos.Errors.Add(e.Message);
+                response.StatusCode = HttpStatusCode.InternalServerError;
+            }
+
+            return response;
+        }
+
     }
 }
