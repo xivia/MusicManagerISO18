@@ -1,4 +1,5 @@
-﻿using MusicManager.Server.Core.Model;
+﻿using Microsoft.EntityFrameworkCore;
+using MusicManager.Server.Core.Model;
 using MusicManger.Server.Core.Infrastructure;
 using System;
 using System.Collections.Generic;
@@ -7,9 +8,8 @@ using System.Threading.Tasks;
 
 namespace MusicManager.Server.Core.Repository
 {
-    public interface IPlaylistRepository
+    public interface IPlaylistRepository : IRepository<Playlist>
     {
-
     }
 
     public class PlaylistRepository : GenericRepository<Playlist>, IPlaylistRepository
@@ -17,6 +17,12 @@ namespace MusicManager.Server.Core.Repository
         public PlaylistRepository(MusicManagerContext context) : base(context)
         {
 
+        }
+
+        public override async Task<Playlist> GetById(long Id)
+        {
+            return await _context.Playlists.Where(p => p.PlaylistId == Id).DefaultIfEmpty()
+                .Include(p => p.User).FirstAsync();
         }
     }
 }
