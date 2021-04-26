@@ -2,9 +2,6 @@
 using MusicManager.Server.Core.DataTransferObjects;
 using MusicManager.Server.Core.DataTransferObjects.PlaylistDtos;
 using MusicManager.Server.Core.Services;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace MusicManager.Server.Controller
