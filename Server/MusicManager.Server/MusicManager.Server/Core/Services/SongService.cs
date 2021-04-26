@@ -20,6 +20,7 @@ namespace MusicManager.Server.Core.Services
         Task<FileDto> GetFilePathBySongId(long songId);
         Task<BaseResponseDto> GetById(long songId);
         Task<BaseResponseDto> DeleteById(long songId);
+        Task<BaseResponseDto> SearchSong(string search);
     }
 
     public class SongService : ISongService

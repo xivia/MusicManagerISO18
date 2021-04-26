@@ -80,7 +80,8 @@ namespace MusicManager.Server.Controller
         [HttpGet("{search}")]
         public async Task<ActionResult<BaseResponseDto>> Search(string search)
         {
-
+            var responseDto = await _songService.SearchSong(search);
+            return responseDto;
         }
 
     }
