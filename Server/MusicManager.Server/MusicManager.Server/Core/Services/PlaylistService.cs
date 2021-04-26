@@ -16,7 +16,7 @@ namespace MusicManager.Server.Core.Services
         Task<BaseResponseDto> Create(PlaylistDto playlistDto);
         Task<BaseResponseDto> GetById(long songId);
         Task<BaseResponseDto> DeleteById(long songId);
-        Task<BaseResponseDto> UpdateById(long songId);
+        Task<BaseResponseDto> UpdateById(PlaylistDto dto);
     }
 
     public class PlaylistService : IPlaylistService
@@ -114,30 +114,22 @@ namespace MusicManager.Server.Core.Services
             return response;
         }
 
-        public async Task<BaseResponseDto> UpdateById(long id)
+        public async Task<BaseResponseDto> UpdateById(PlaylistDto dto)
         {
             var response = new BaseResponseDto();
 
             try
             {
-                var dbPlaylist = await _playlistRepository.GetById(id);
-
-                if (dbPlaylist is null)
+                if (dto is null)
                 {
-                    response.Infos.Errors.Add($"Playlist with id {id} has not been found");
+                    response.Infos.Errors.Add($"Playlist with id {dto.PlaylistId} has not been found");
                     response.StatusCode = HttpStatusCode.NotFound;
                     return response;
                 }
 
                 var currentUser = await _requestDataService.GetCurrentUser();
 
-                if (dbPlaylist.UserId != currentUser.UserId)
-                {
-                    response.Infos.Errors.Add($"Song with id {id} cannot be deleted because it isn't linked to your account");
-                    response.StatusCode = HttpStatusCode.Unauthorized;
-                    return response;
-                }
-                await _playlistRepository.Update(dbPlaylist);
+                await _playlistRepository.Update(PlaylistMapper.DtoToDb(dto));
 
             }
             catch (Exception e)
