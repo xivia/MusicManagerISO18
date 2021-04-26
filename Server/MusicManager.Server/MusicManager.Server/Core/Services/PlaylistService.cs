@@ -8,6 +8,7 @@ using MusicManager.Server.Core.Repository;
 using MusicManager.Server.Core.DataTransferObjects.PlaylistDtos;
 using MusicManager.Server.Core.DataTransferObjects.Mapper;
 using System.Net;
+using MoreLinq;
 
 namespace MusicManager.Server.Core.Services
 {
@@ -17,6 +18,7 @@ namespace MusicManager.Server.Core.Services
         Task<BaseResponseDto> GetById(long songId);
         Task<BaseResponseDto> DeleteById(long songId);
         Task<BaseResponseDto> UpdateById(long songId);
+        Task<BaseResponseDto> ShufflePlaylistById(long playlistId);
     }
 
     public class PlaylistService : IPlaylistService
@@ -148,5 +150,33 @@ namespace MusicManager.Server.Core.Services
 
             return response;
         }
+
+        public async Task<BaseResponseDto> ShufflePlaylistById(long playlistId)
+        {
+            var response = new BaseResponseDto();
+
+            try
+            {
+                var playlist = await _playlistRepository.GetById(playlistId);
+
+                if(playlist is null)
+                {
+                    response.StatusCode = HttpStatusCode.NotFound;
+                    response.AddError($"Playlist with id {playlistId} not found");
+                }
+
+                playlist.Songs = playlist.Songs.Shuffle().ToList();
+
+                response.Data.Add("playlist", PlaylistMapper.DbToDto(playlist));
+            }
+            catch (Exception e)
+            {
+                response.Infos.Errors.Add(e.Message);
+                response.StatusCode = HttpStatusCode.InternalServerError;
+            }
+
+            return response;
+        }
+
     }
 }
