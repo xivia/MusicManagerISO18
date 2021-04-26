@@ -20,6 +20,7 @@ namespace MusicManager.Server.Core.Services
         Task<FileDto> GetFilePathBySongId(long songId);
         Task<BaseResponseDto> GetById(long songId);
         Task<BaseResponseDto> DeleteById(long songId);
+        Task<BaseResponseDto> SearchSong(string search);
     }
 
     public class SongService : ISongService
@@ -200,6 +201,31 @@ namespace MusicManager.Server.Core.Services
 
                 if(!_fileService.DeleteFile(dbSong.FilePath))
                     throw new Exception("Failed to delete the song file");
+            }
+            catch (Exception e)
+            {
+                response.Infos.Errors.Add(e.Message);
+                response.StatusCode = HttpStatusCode.InternalServerError;
+            }
+
+            return response;
+        }
+
+        public async Task<BaseResponseDto> SearchSong(string search)
+        {
+            var response = new BaseResponseDto();
+
+            try
+            {
+                var dbSongs = await _songRepository.SearchSongByTitle(search);
+
+                if(dbSongs.Count < 1)
+                {
+                    response.AddError($"No songs found with search {search}");
+                    response.StatusCode = HttpStatusCode.NotFound;
+                }
+
+                response.Data.Add("songs", SongResponseDtoMapper.DbToDto(dbSongs));
             }
             catch (Exception e)
             {

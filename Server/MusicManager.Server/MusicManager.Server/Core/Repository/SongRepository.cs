@@ -10,7 +10,7 @@ namespace MusicManager.Server.Core.Repository
 {
     public interface ISongRepository : IRepository<Song>
     {
-
+        Task<List<Song>> SearchSongByTitle(string search);
     }
 
     public class SongRepository : GenericRepository<Song>, ISongRepository
@@ -26,6 +26,12 @@ namespace MusicManager.Server.Core.Repository
                     .Include(song => song.SongGenre)
                     .Include(song => song.Artist)
                     .FirstAsync();
+        }
+
+        public async Task<List<Song>> SearchSongByTitle(string search)
+        {
+            return await _context.Songs.Where(song => song.Name.Contains(search))
+                .ToListAsync();
         }
 
     }

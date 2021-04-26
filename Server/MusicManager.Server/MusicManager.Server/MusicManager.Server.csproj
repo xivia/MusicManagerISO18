@@ -23,6 +23,7 @@
     <PackageReference Include="FluentValidation.AspNetCore" Version="9.2.0" />
     <PackageReference Include="Microsoft.AspNetCore.App" />
     <PackageReference Include="Microsoft.AspNetCore.Razor.Design" Version="2.1.2" PrivateAssets="All" />
+    <PackageReference Include="morelinq" Version="3.3.2" />
     <PackageReference Include="TagLibSharp" Version="2.2.0" />
   </ItemGroup>
 
