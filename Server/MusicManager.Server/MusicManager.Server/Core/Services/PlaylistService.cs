@@ -25,11 +25,13 @@ namespace MusicManager.Server.Core.Services
     {
         private readonly IPlaylistRepository _playlistRepository;
         private readonly IRequestDataService _requestDataService;
+        private readonly ISongRepository _songRepository;
 
-        public PlaylistService(IPlaylistRepository playlistRepository, IRequestDataService requestDataService)
+        public PlaylistService(IPlaylistRepository playlistRepository, IRequestDataService requestDataService, ISongRepository songRepository)
         {
             _playlistRepository = playlistRepository;
             _requestDataService = requestDataService;
+            _songRepository = songRepository;
         }
         public async Task<BaseResponseDto> Create(PlaylistDto playlistDto)
         {
@@ -37,6 +39,17 @@ namespace MusicManager.Server.Core.Services
 
             try
             {
+                List<Song> songs = await _songRepository.GetBySongIds(playlistDto.SongIds);
+
+                if(songs.Count < 1)
+                {
+                    responseDto.StatusCode = HttpStatusCode.NotFound;
+                    responseDto.AddError("No songs found");
+                    return responseDto;
+                }
+
+                playlistDto.Songs = songs;
+
                 var newDbPlaylist = await _playlistRepository.Insert(PlaylistMapper.DtoToDb(playlistDto));
 
                 responseDto.AddInfo("Created Playlist successful");

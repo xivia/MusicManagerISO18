@@ -11,6 +11,7 @@ namespace MusicManager.Server.Core.Repository
     public interface ISongRepository : IRepository<Song>
     {
         Task<List<Song>> SearchSongByTitle(string search);
+        Task<List<Song>> GetBySongIds(List<long> songIds);
     }
 
     public class SongRepository : GenericRepository<Song>, ISongRepository
@@ -32,6 +33,11 @@ namespace MusicManager.Server.Core.Repository
         {
             return await _context.Songs.Where(song => song.Name.Contains(search))
                 .ToListAsync();
+        }
+
+        public async Task<List<Song>> GetBySongIds(List<long> songIds)
+        {
+            return await _context.Songs.Where(song => songIds.Contains(song.SongId)).ToListAsync();
         }
 
     }
