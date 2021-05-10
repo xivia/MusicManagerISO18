@@ -19,6 +19,7 @@ namespace MusicManager.Server.Core.Services
         Task<BaseResponseDto> ShufflePlaylistById(long songId);
         Task<BaseResponseDto> DeleteById(long songId);
         Task<BaseResponseDto> Update(PlaylistDto dto);
+        Task<BaseResponseDto> AddSongToPlaylist(long playlistId, long songId);
     }
 
     public class PlaylistService : IPlaylistService
@@ -49,6 +50,10 @@ namespace MusicManager.Server.Core.Services
                 }
 
                 playlistDto.Songs = songs;
+
+                User user = await _requestDataService.GetCurrentUser();
+
+                playlistDto.User = user;
 
                 var newDbPlaylist = await _playlistRepository.Insert(PlaylistMapper.DtoToDb(playlistDto));
 
@@ -118,7 +123,7 @@ namespace MusicManager.Server.Core.Services
                     return response;
                 }
 
-                response.Data.Add("song", PlaylistMapper.DbToDto(dbPlaylist));
+                response.Data.Add("playlist", PlaylistMapper.DbToDto(dbPlaylist));
             }
             catch (Exception e)
             {
@@ -181,6 +186,51 @@ namespace MusicManager.Server.Core.Services
             }
 
             return response;
+        }
+
+        public async Task<BaseResponseDto> AddSongToPlaylist(long playlistId, long songId)
+        {
+            var responseDto = new BaseResponseDto();
+
+            try
+            {
+                var playlist = await _playlistRepository.GetById(playlistId);
+
+                if(playlist is null)
+                {
+                    responseDto.StatusCode = HttpStatusCode.NotFound;
+                    responseDto.AddError($"Playlist with id {playlistId} not found");
+                    return responseDto;
+                }
+
+                var song = await _songRepository.GetById(songId);
+
+                if(song is null)
+                {
+                    responseDto.StatusCode = HttpStatusCode.NotFound;
+                    responseDto.AddError($"Song with id {songId} not found");
+                    return responseDto;
+                }
+
+                var user = await _requestDataService.GetCurrentUser();
+
+                if(playlist.User != user)
+                {
+                    responseDto.StatusCode = HttpStatusCode.Unauthorized;
+                    return responseDto;
+                }
+
+                playlist.Songs.Add(song);
+
+                await _playlistRepository.Update(playlist);
+            }
+            catch (Exception e)
+            {
+                responseDto.Infos.Errors.Add(e.Message);
+                responseDto.StatusCode = HttpStatusCode.InternalServerError;
+            }
+
+            return responseDto;
         }
 
     }

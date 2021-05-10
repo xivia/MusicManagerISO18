@@ -54,6 +54,7 @@ namespace MusicManager.Server
             services.AddScoped<IFileService, FileService>();
             services.AddScoped<ISongService, SongService>();
             services.AddScoped<ISongLyricsService, SongLyricsService>();
+            services.AddScoped<IPlaylistService, PlaylistService>();
 
             services.AddAuthentication(JwtBearerDefaults.AuthenticationScheme)
                 .AddJwtBearer(options =>

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Mvc;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Mvc;
 using MusicManager.Server.Core.DataTransferObjects;
 using MusicManager.Server.Core.DataTransferObjects.PlaylistDtos;
 using MusicManager.Server.Core.Services;
@@ -25,6 +26,7 @@ namespace MusicManager.Server.Controller
         }
 
         [HttpPost]
+        [Authorize]
         public async Task<ActionResult<BaseResponseDto>> Create(PlaylistDto playlistDto)
         {
             var response = await _playlistService.Create(playlistDto);
@@ -32,6 +34,7 @@ namespace MusicManager.Server.Controller
         }
 
         [HttpDelete("{playlistId}")]
+        [Authorize]
         public async Task<ActionResult<BaseResponseDto>> Delete(long playlistId)
         {
             var response = await _playlistService.DeleteById(playlistId);
@@ -46,9 +49,18 @@ namespace MusicManager.Server.Controller
         }
 
         [HttpPut("{playlistId}")]
+        [Authorize]
         public async Task<ActionResult<BaseResponseDto>> Update(PlaylistDto playlistDto)
         {
             var response = await _playlistService.Update(playlistDto);
+            return response;
+        }
+
+        [HttpPut("{playlistId}/add/{songId}")]
+        [Authorize]
+        public async Task<ActionResult<BaseResponseDto>> AddSongToPlaylist(long playlistId, long songId)
+        {
+            var response = await _playlistService.AddSongToPlaylist(playlistId, songId);
             return response;
         }
 

@@ -18,7 +18,6 @@ namespace MusicManager.Server.Core.DataTransferObjects.Mapper
                 Songs = playlistDto.Songs,
                 User = playlistDto.User,
                 UserId = playlistDto.User.UserId
-
             };
         }
 
@@ -30,8 +29,6 @@ namespace MusicManager.Server.Core.DataTransferObjects.Mapper
                 PlaylistId = playlist.PlaylistId,
                 Songs = playlist.Songs,
                 User = playlist.User
-               
-
             };
         }
     }

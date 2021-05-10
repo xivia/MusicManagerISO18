@@ -13,5 +13,6 @@ namespace MusicManager.Server.Core.DataTransferObjects.PlaylistDtos
         public string Name { get; set; }
         public virtual List<long> SongIds { get; set; }
         public List<Song> Songs { get; set; }
+        public long UserId { get; set; }
     }
 }

@@ -22,7 +22,7 @@ namespace MusicManager.Server.Core.Repository
         public override async Task<Playlist> GetById(long Id)
         {
             return await _context.Playlists.Where(p => p.PlaylistId == Id).DefaultIfEmpty()
-                .Include(p => p.User).FirstAsync();
+                .Include(playlist => playlist.Songs).FirstOrDefaultAsync();
         }
     }
 }
